@@ -1,0 +1,42 @@
+<!-- Displays user home page -->
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			You are part of the following teams:
+			<ul class="nav nav-tabs">
+        <li ng-repeat="team in vmHome.teams" ng-click="vmHome.selectedTeam(team)">
+          <a href="#">{{team.name}}</a>
+        </li>
+			</ul>
+		</div>
+	</div>
+</div>
+<br />
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      {{vmHome.selectedTeamInfo.name}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <div class="btn-group btn-group-md">
+
+        <button class="btn btn-default" ui-sref="home.chat" type="button">
+          <em class="glyphicon glyphicon-align-left"></em> Chat
+        </button>
+        <button class="btn btn-default" ui-sref="home.wall" type="button">
+          <em class="glyphicon glyphicon-align-center"></em> Wall
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class = "row">
+    <div class = "col-md-12">
+      <div ui-view></div>
+    </div>
+  </div>
+</div>

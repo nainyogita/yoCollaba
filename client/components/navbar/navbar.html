@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="./index.css">
+
+<div class="navbar navbar-default navbar-static-top bar">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" ng-click="$ctrl.isCollapsed = !$ctrl.isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">yo-collaba</a>
+    </div>
+    <div uib-collapse="$ctrl.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
+            <a ui-sref="{{item.state}}">{{item.title}}</a>
+        </li>
+        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
+        <li ng-show="$ctrl.isOwner()" ui-sref-active="active"><a ui-sref="owner">Owner</a></li>
+        <li ng-show="$ctrl.isUser() ||$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="home">UserHome</a></li>
+        <li ng-show="$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="teamleader">Team Leader</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active"><a ui-sref="organization">Register Organization</a></li>
+        <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active"><a ui-sref="signup">Sign up</a></li>
+        <li ng-hide="$ctrl.isLoggedIn()" ui-sref-active="active"><a ui-sref="login">Login</a></li>
+        <li ng-show="$ctrl.isLoggedIn()"><p class="navbar-text">Hello {{ $ctrl.getCurrentUser().name }}</p> </li>
+        <li ng-show="$ctrl.isLoggedIn()" ui-sref-active="active"><a ui-sref="settings"><img src="assets/images/settings.png" alt="SETTINGS" style="width:18px;height:18px;"/></a></li>
+        <li ng-show="$ctrl.isLoggedIn()"><a ui-sref="logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

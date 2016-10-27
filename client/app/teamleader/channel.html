@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="teamleader.css">
+<div class="container-fluid">
+	<div class="row">
+		<!-- display teams and channels under a particular team leader  -->
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+			<!-- TODO: To display one team according to user choice -->
+			<!-- <div class="row">
+					Select Team:
+				<div>
+					<select name = "teamChoice" id = "teamChoice"
+					ng-options = " team.name for team in teamleader.teamInfo "
+					ng-model = "displayTeam">
+					</select>
+				</div>
+			</div> -->
+			Team wise channels
+			<ul class="list-group" ng-repeat='teams in teamleader.teamInfo | filter:displayTeam'>
+			  <li class="list-group-item active" ><b>{{teams.name}}</b></li>
+				<li class="list-group-item" >
+					<ul class="list-group" ng-repeat='channels in teams.channel'>
+						<li class="list-group-item" >{{channels.name}}
+						<span class="badge">{{channels.members.length}} member</span></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"></div>
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<!-- form for creating a new channel -->
+			<h3>New channel</h3>
+			<form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="teamSelect" class="col-sm-2 control-label">
+            Select Team
+          </label>
+          <div class="col-sm-10">
+            <select name = "teamSelect" id = "mySelect"
+            ng-options = " team.name for team in teamleader.teamInfo "
+            ng-model = "teamleader.selectedOption">
+            </select>
+          </div>
+        </div>
+
+				<div class="form-group">
+
+					<label for="channelName" class="col-sm-2 control-label">
+						Channel Name
+					</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="channelName" ng-model = "teamleader.channelJSON.name" required/>
+					</div>
+				</div>
+
+				<div class="form-group">
+
+					<label for="channelType" class="col-sm-2 control-label">
+						Channel Type
+					</label>
+					<div class="col-sm-10">
+						<div class="onoffswitch">
+    					<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" ng-model = "teamleader.channelJSON.type">
+    					<label class="onoffswitch-label" for="myonoffswitch">
+        				<span class="onoffswitch-inner"></span>
+        				<span class="onoffswitch-switch"></span>
+    					</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="channelDesc" class="col-sm-2 control-label">
+						Description
+					</label>
+					<div class="col-sm-10">
+						<textarea class="form-control" id="channelDesc" ng-model = "teamleader.channelJSON.info">
+            </textarea>
+					</div>
+				</div>
+
+        <div class="form-group">
+					<label for="channelFolks" class="col-sm-2 control-label">
+						Add Members
+            <!-- CSV for now -->
+					</label>
+					<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+						<div class="row">
+							<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+								<input type = "text" class="form-control" id="channelFolks"
+											ng-model = "teamleader.member" required/>
+							</div>
+							<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+								<button type="button" class="btn-danger btn-circle" ng-click="teamleader.addChannelMember()">+</button>
+							</div>
+						</div>
+
+						<div ng-repeat="members in teamleader.channelJSON.members">
+						<div>
+								<span class="chip">
+								  {{members}}
+									<span class="closebtn" ng-click="teamleader.memListRem($index)">&times;</span>
+								</span>
+							</div>
+						</div>
+				</div>
+
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-default" ng-click = "teamleader.addChannel()">
+							Add Channel
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

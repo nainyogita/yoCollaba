@@ -1,0 +1,17 @@
+.publicwall{
+  background-color: indigo;
+}
+
+.wallname{
+  color: white;
+  font-weight: bold;
+}
+
+.wallback{
+    background-color: #4393B9;
+}
+
+.p{
+  margin:15px;
+  padding:20px;
+}

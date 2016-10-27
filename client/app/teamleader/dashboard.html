@@ -1,0 +1,49 @@
+<!-- display team information  -->
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading" >
+					<h3 class="panel-title">
+						Teams
+					</h3>
+				</div>
+				<div class="panel-body" >
+					<div class="well" ng-repeat='teams in teamleader.teamInfo'>
+						<table class="table table-condensed table-tripped" >
+							<tr>
+								<td class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+									<b>TEAM: </b>{{teams.name}}
+								</td>
+								<td class="col-lg-9 col-md-9 col-sm-9 col-xs-6">
+									<a ui-sref="editTeam" ng-click='teamleader.changeSelectedTeam(teams)'>
+										Edit
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+									Team Information:
+								</td>
+								<td class="col-lg-9 col-md-9 col-sm-9 col-xs-6">
+									{{teams.info}}
+								</td>
+							</tr>
+							<tr>
+								<td class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+									Team Leads:
+								</td>
+								<td class="col-lg-9 col-md-9 col-sm-9 col-xs-6">
+									<ul ng-repeat='heads in teams.thead'>
+										<li>{{heads}}</li>
+									</ul>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

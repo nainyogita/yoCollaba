@@ -46,8 +46,9 @@
 
     <div class="col-md-6 chatbox">
       <h5>
-        CHAT BOX
+        CHAT BOX   ##{{vm.roomTitle}}
       </h5>
+
       <ul ng-repeat='chat in chatCtrl.chatHistory' class="list-group">
         <li class="list-group-item"><span class="well">{{chat.sender}}</span>&nbsp;<span class="message" ng-bind-html="chat.message"> {{chat.message}}</span></li>
       </ul>
@@ -55,10 +56,6 @@
       <ul class="list-unstyled">
         <li ng-repeat="chat in vm.chatHistory">
           <span class="">{{chat.sender}}</span> &nbsp; ::<span class="message" ng-bind-html="chat.message"> {{chat.message}} </span>
-
-
-          <!-- <img ng-hide="vm.pc || chat.pinned" src="assets/images/wall.png" alt="WALL IT!" style="width:20px;height:20px;" ng-click="vm.saveForWall(chat.sender,chat.message)">
-          <img ng-show="chat.pinned" src="assets/images/pinned.png" alt="PINNED!" style="width:20px;height:20px;"> -->
 
           <div ng-click="vm.toggleHide($index)" ng-hide="chat.hide">
             <img ng-hide="vm.pc" src="assets/images/wall.png" alt="WALL IT!" style="width:20px;height:20px;" ng-click="vm.saveForWall(chat.sender,chat.message)">
@@ -71,20 +68,17 @@
       </ul>
 
       <div class="row chatinput">
-        <!-- <div class="col-md-7"> -->
+
         <input type="text" placeholder="Enter your Message" ng-model="vm.message" />
-        <!-- </div>
-        <div class="col-md-2"> -->
         <!-- Upload on file select -->
         <button type="button" class="btn btn-sm btn-primary" ngf-select="vm.upload($file)">+</button>
         <br><br>
 
-        <!-- </div>
-        <div class="col-md-3"> -->
+
         <button type="button" class="btn btn-sm btn-primary" ng-click="vm.sendMessage()">
           Send Message
         </button>
-        <!-- </div> -->
+
       </div>
 
       <div class="col-md-12">
@@ -93,6 +87,7 @@
         </button>
       </div>
 
+      <!-- Progress Bar for Upload File -->
       <div class="row" ng-show="vm.progressVisible">
         File:
         <div style="font:smaller">{{vm.f.name}}
@@ -107,21 +102,20 @@
 
     </div>
 
-
+<!-- Display team members and online users -->
     <div class="col-md-3 odiv">
       <h4>
         Online Users
       </h4>
-      <ul class="list-unstyled">
-        <li ng-repeat="ou in vm.onlineUsers" ng-click="vm.privateChat(ou)">
 
+      <ul class="list-unstyled">
+        <!-- New Code :  Show all team members -->
+        <li ng-repeat="ou in vmHome.teamMembers" ng-click="vm.privateChat(ou)">
           <div class="btn btn-default online">
-            <img src="assets/images/online.png" alt="Online" style="width:10px;height:10px;" />
             {{ou.name}}
+            <img ng-if="vm.checkMemberOnline(ou)" src="assets/images/online.png" alt="Online" style="width:10px;height:10px;" />
           </div>
-          <!-- TODO: **PARKING LOT** -->
-          <!-- Details can be shown to user in collapsible div -->
-          <!-- {{ou.email}} -->
+
         </li>
       </ul>
     </div>

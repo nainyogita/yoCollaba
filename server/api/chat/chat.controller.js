@@ -18,7 +18,7 @@ import fs from 'fs';
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
-    if(entity) {
+    if (entity) {
       return res.status(statusCode).json(entity);
     }
     return null;
@@ -29,7 +29,7 @@ function patchUpdates(patches) {
   return function(entity) {
     try {
       jsonpatch.apply(entity, patches, /*validate*/ true);
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(err);
     }
 
@@ -39,7 +39,7 @@ function patchUpdates(patches) {
 
 function removeEntity(res) {
   return function(entity) {
-    if(entity) {
+    if (entity) {
       return entity.remove()
         .then(() => {
           res.status(204).end();
@@ -50,7 +50,7 @@ function removeEntity(res) {
 
 function handleEntityNotFound(res) {
   return function(entity) {
-    if(!entity) {
+    if (!entity) {
       res.status(404).end();
       return null;
     }
@@ -63,6 +63,56 @@ function handleError(res, statusCode) {
   return function(err) {
     res.status(statusCode).send(err);
   };
+}
+
+// Retrieve chat history when user starts to chat
+export function getChatHistory(req, res) {
+  var room = req.params.roomName;
+  // console.log('-----Server room name-----');
+  // console.log(room);
+  return Chat.findOne({
+      'roomName': room
+    })
+    .exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+
+// Saves the chat message in chat history in DB
+export function saveMessage(req, res) {
+  var room = req.params.roomName;
+  var chatHistory = req.body.data;
+
+  console.log(room);
+  console.log(chatHistory);
+
+  return Chat.findOne({
+      'roomName': room
+    }).exec()
+    .then(chatObj => {
+
+      //Room doesnt exist, create new document
+      if (!chatObj) {
+        console.log('no chat obj');
+        var newChat = new Chat({
+          roomName: room,
+          history: chatHistory
+        });
+
+        newChat.save().then(() => {
+          respondWithResult(res);
+        });
+      }
+      //Room exists, save chatHistory
+      else {
+        chatObj.history.push(chatHistory);
+        chatObj.save().then(() => {
+          respondWithResult(res);
+        });
+      }
+    })
+    .catch(handleError(res));
 }
 
 // Gets a list of Chats
@@ -89,18 +139,24 @@ export function create(req, res) {
 
 // Upserts the given Chat in the DB at the specified ID
 export function upsert(req, res) {
-  if(req.body._id) {
+  if (req.body._id) {
     delete req.body._id;
   }
-  return Chat.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+  return Chat.findOneAndUpdate({
+    _id: req.params.id
+  }, req.body, {
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true
+  }).exec()
 
-    .then(respondWithResult(res))
+  .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
 // Updates an existing Chat in the DB
 export function patch(req, res) {
-  if(req.body._id) {
+  if (req.body._id) {
     delete req.body._id;
   }
   return Chat.findById(req.params.id).exec()
@@ -118,14 +174,14 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-export function uploadFile(req, res){
-    // We are able to access req.files.file
-    // throught the multiparty middleware
+export function uploadFile(req, res) {
+  // We are able to access req.files.file
+  // throught the multiparty middleware
 
-    var file = req.files.file;
-    //var filename = path.basename(data.name);
-    var filepath = path.join(__dirname, '.', 'uploads', file.name);
-    fs.createWriteStream(filepath);
-    
-    
+  var file = req.files.file;
+  //var filename = path.basename(data.name);
+  var filepath = path.join(__dirname, '.', 'uploads', file.name);
+  fs.createWriteStream(filepath);
+
+
 }

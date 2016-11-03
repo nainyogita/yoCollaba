@@ -9,7 +9,7 @@ import User from '../api/user/user.model';
 import Organization from '../api/organization/organization.model';
 //
 //
-// Organization.find({}).remove()
+// Organization.find({}).remove();
 //   .then(() => {
 //     Organization.create({
 //         name: 'ABC Organisation',
@@ -80,20 +80,22 @@ import Organization from '../api/organization/organization.model';
 //
 User.find({})
   .then(() => {
-    User.create({
-        provider: 'local',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'test'
-      }, {
+    User.create(
+      // {
+      //   provider: 'local',
+      //   name: 'Test User',
+      //   email: 'test@example.com',
+      //   password: 'test'
+      // },
+      {
         provider: 'local',
         role: 'admin',
         name: 'Admin',
-        email: 'admin@example.com',
+        email: 'admin@collaba.com',
         password: 'admin',
         status: true
       });
-    });
+  });
 //      , {
 //         provider: 'local',
 //         role: 'owner',
@@ -162,6 +164,6 @@ User.find({})
 //         partOf: {org:'ABC Organisation' ,team:['team B']}
 //       })
 //       .then(() => {
-//         
+//
 //       });
 //   });

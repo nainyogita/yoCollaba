@@ -21,59 +21,57 @@ function Socket(socketFactory) {
   return {
     socket,
 
-    onlineUsers(user){
-      socket.emit('add:onlineUsers',user);
-      socket.emit('remove:onlineUsers',user);
+    onlineUsers(user) {
+      socket.emit('add:onlineUsers', user);
     },
 
-    syncOnlineUsers(cb){
-      socket.on('add:onlineUsers',function(data){
+    syncOnlineUsers(cb) {
+      socket.on('add:onlineUsers', function(data) {
         console.log("Get syncOnlineUsers data:");
         console.log(data);
         cb(data);
       });
-
-      socket.on('remove:onlineUsers',function(data){
-        console.log("Get syncOnlineUsers data:");
-        console.log(data);
-        cb(data);
-      });
-
     },
 
     //Send room channelId to join
-    room(roomName){
-      socket.emit('room',roomName);
+    room(roomName) {
+      socket.emit('room', roomName);
     },
 
     //Send Messahe to channel on
-    sendMessage(data){
+    sendMessage(data) {
       console.log(data);
-      socket.emit('room:sendMessage',data);
+      socket.emit('room:sendMessage', data);
     },
 
-    syncUpdateChat(cb){
-      socket.on('room:sendMessage',function(data){
-        console.log("Get info:"+data);
+    syncUpdateChat(cb) {
+      socket.on('room:sendMessage', function(data) {
+        console.log("Get info:" + data);
         cb(data);
       });
     },
+
+    logout() {
+      socket.emit('logout:disconnect');
+    },
+
     /**
-    * Register listeners to sync an array with updates on a model
-    *
-    * Takes the array we want to sync, the model name that socket updates are sent from,
-    * and an optional callback function after new items are updated.
-    *
-    * @param {String} modelName
-    * @param {Array} array
-    * @param {Function} cb
-    */
+     * Register listeners to sync an array with updates on a model
+     *
+     * Takes the array we want to sync, the model name that socket updates are sent from,
+     * and an optional callback function after new items are updated.
+     *
+     * @param {String} modelName
+     * @param {Array} array
+     * @param {Function} cb
+     */
     syncUpdates(modelName, array, cb) {
       cb = cb || angular.noop;
 
       /**
-      * Syncs item creation/updates on 'model:save'
-      */
+       * Syncs item creation/updates on 'model:save'
+       */
+
       socket.on(`${modelName}:save`, function(item) {
         var oldItem = _.find(array, {
           _id: item._id
@@ -83,7 +81,7 @@ function Socket(socketFactory) {
 
         // replace oldItem if it exists
         // otherwise just add item to the collection
-        if(oldItem) {
+        if (oldItem) {
           array.splice(index, 1, item);
           event = 'updated';
         } else {
@@ -94,8 +92,8 @@ function Socket(socketFactory) {
       });
 
       /**
-      * Syncs removed items on 'model:remove'
-      */
+       * Syncs removed items on 'model:remove'
+       */
       socket.on(`${modelName}:remove`, function(item) {
         var event = 'deleted';
         _.remove(array, {
@@ -106,17 +104,17 @@ function Socket(socketFactory) {
     },
 
     /**
-    * Removes listeners for a models updates on the socket
-    *
-    * @param modelName
-    */
+     * Removes listeners for a models updates on the socket
+     *
+     * @param modelName
+     */
     unsyncUpdates(modelName) {
       socket.removeAllListeners(`${modelName}:save`);
       socket.removeAllListeners(`${modelName}:remove`);
-    }
+    },
   };
 }
 
 export default angular.module('yoCollabaApp.socket', [])
-.factory('socket', Socket)
-.name;
+  .factory('socket', Socket)
+  .name;

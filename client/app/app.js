@@ -6,6 +6,7 @@ import ngCookies from 'angular-cookies';
 import ngResource from 'angular-resource';
 import ngSanitize from 'angular-sanitize';
 import ngFileUpload from 'ng-file-upload';
+import uiNotification from 'angular-ui-notification';
 import 'angular-socket-io';
 
 import uiRouter from 'angular-ui-router';
@@ -35,11 +36,11 @@ import socket from '../components/socket/socket.service';
 import './app.css';
 
 angular.module('yoCollabaApp', [ngCookies, ngResource, ngSanitize,
-  'btford.socket-io', uiRouter, uiBootstrap,
-   _Auth, account, admin, owner, teamleader,
-   navbar,user, footer, main,
-   constants, socket, util,
-   organization, ngFileUpload
+    'btford.socket-io', uiRouter, uiBootstrap,
+    _Auth, account, admin, owner, teamleader,
+    navbar, user, footer, main,
+    constants, socket, util,
+    organization, ngFileUpload, uiNotification
   ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
@@ -48,7 +49,7 @@ angular.module('yoCollabaApp', [ngCookies, ngResource, ngSanitize,
 
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {
-        if(next.authenticate && !loggedIn) {
+        if (next.authenticate && !loggedIn) {
           $location.path('/login');
         }
       });

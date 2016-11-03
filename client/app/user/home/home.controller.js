@@ -1,44 +1,65 @@
 'use strict';
 
-export default class HomeController{
+export default class HomeController {
   Auth;
+  selectedTeamInfo = {};
   user = {};
-  teams=[];
+  domain = '';
+  teams = [];
+  teamMembers = [];
+
   /*@ngInject*/
-  constructor(Auth, $state, TeamLeader) {
-    this.team=false;
+  constructor(Auth, $state, $scope, TeamLeader, socket, $http) {
+    this.$http = $http;
+    this.socket = socket;
+    this.team = false;
     this.Auth = Auth;
     this.$state = $state;
     this.homemessage = 'HomeController';
-    this.User = TeamLeader;
     this.email = Auth.getCurrentUserSync().email;
 
-    TeamLeader.getUserTeams({'email' : this.email}).$promise.then((data) => {
-      this.teams=data;
-
+    TeamLeader.getUserTeams({
+      'email': this.email
+    }).$promise.then((data) => {
+      this.teams = data;
     });
-
-    this.User = TeamLeader;
   }
 
   $onInit() {
 
     this.Auth.getCurrentUser().then(response => {
 
-      //Generate List of OnlineUsers
-      this.user={
+      this.user = {
         id: response._id,
         name: response.name,
-        email:response.email
+        email: response.email
       };
+
+      this.domain = (response.email).split('@');
+      this.domain = this.domain[this.domain.length - 1];
+
     });
   }
 
-//Get information of selected team
-//This info is used in nested views controller
-  selectedTeam(team){
+  //Get information of selected team
+  //This info is used in nested views controller
+  selectedTeam(team) {
+
     this.selectedTeamInfo = team;
     this.team = true;
+    this.getTeamMembers();
+  }
 
+  getTeamMembers() {
+    console.log(this.selectedTeamInfo.members);
+    this.teamMembers = [];
+    angular.forEach(this.selectedTeamInfo.members, (email) => {
+
+      this.$http.get('/api/users/getByEmail/' + email).then((response) => {
+        console.log(response);
+        this.teamMembers.push(response.data);
+      });
+
+    });
   }
 }

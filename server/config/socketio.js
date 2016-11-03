@@ -5,75 +5,56 @@
 
 // import config from './environment';
 var onlineUsers = [];
-var numOnlineUsers;
+var numOnlineUsers = 0;
 
 
 // When the user disconnects.. perform this
-function onDisconnect(socket,socketio) {
-  //send message to the people in channel
-
-  //ISSUE: NOT Working
-  //console.log("Data");
-
-  // console.log(numOnlineUsers);
-  // console.log(onlineUsers);
-  socket.on('remove:onlineUsers', data => {
-  // console.log('Socket:id' + socket.id);
-  console.log("REMOVE ONLINE USER");
-  console.log("Data");
-  console.log(data);
+function onDisconnect(socket, socketio) {
   numOnlineUsers--;
-  console.log(numOnlineUsers);
   onlineUsers.splice(onlineUsers.indexOf(socket.id), 1);
-  socketio.emit('remove:onlineUsers', onlineUsers);
-  socket.log(JSON.stringify(data, null, 2));
-});
-
+  //socketio --> broadcast to all
+  //socket --> broadcast to self
+  socketio.emit('add:onlineUsers', onlineUsers);
 }
-
-
 
 // When the user connects.. perform this
 function onConnect(socket, socketio) {
+
+  socket.on('logout:disconnect', () => {
+    console.log('LOgout disconnect ------------------');
+    onDisconnect(socket, socketio);
+    socketio.emit('disconnect');
+  });
+
   // When the client emits 'info', this listens and executes
   socket.on('info', data => {
     socket.log(JSON.stringify(data, null, 2));
   });
 
-      //send message to the people in channel
-      socket.on('add:onlineUsers', data => {
-      // console.log('Socket:id' + socket.id);
-      console.log("Data");
-      console.log(data);
+  //send message to the people in channel
+  socket.on('add:onlineUsers', data => {
+    numOnlineUsers++;
+    onlineUsers.push(data);
+    socketio.emit('add:onlineUsers', onlineUsers);
+    socket.log(JSON.stringify(data, null, 2));
+  });
 
-      numOnlineUsers++;
-      onlineUsers.push(data);
-      console.log(onlineUsers);
-      console.log("SocketId-->");
-      console.log(socket.id);
+  //Create rooms for chat
+  socket.on('room', data => {
+    socket.join(data);
+  });
 
-      socketio.emit('add:onlineUsers', onlineUsers);
-      socket.log(JSON.stringify(data, null, 2));
-    });
-
-    //Create rooms for chat
-    socket.on('room', data => {
-      socket.join(data);
-    });
-
-    //send message to the people in channel
-    socket.on('room:sendMessage', data => {
-      // console.log('Socket:id' + socket.id);
-      // console.log("Data:" + data);
-      socketio.to(data.room)
-        .emit('room:sendMessage', data);
-      socket.log(JSON.stringify(data, null, 2));
-    });
+  //send message to the people in channel
+  socket.on('room:sendMessage', data => {
+    socketio.to(data.room)
+      .emit('room:sendMessage', data);
+    socket.log(JSON.stringify(data, null, 2));
+  });
 
 
   // Insert sockets below
   require('../api/emojis/emojis.socket').register(socket);
-   require('../api/wall/wall.socket').register(socket);
+  require('../api/wall/wall.socket').register(socket);
   require('../api/channel/channel.socket').register(socket);
   require('../api/team/team.socket').register(socket);
   require('../api/chat/chat.socket').register(socket);
@@ -111,12 +92,12 @@ export default function(socketio) {
 
     // Call onDisconnect.
     socket.on('disconnect', () => {
-      onDisconnect(socket,socketio);
+      onDisconnect(socket, socketio);
       socket.log('DISCONNECTED');
     });
 
     // Call onConnect.
-    onConnect(socket,socketio);
+    onConnect(socket, socketio);
     socket.log('CONNECTED');
   });
 }

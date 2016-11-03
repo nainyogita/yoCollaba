@@ -5,10 +5,11 @@
       <div class="col-md-12 text-center">
         <div class="btn-group btn-group-md">
           <button class="btn btn-default" type="button" ng-click="vm.showWalls(vmHome.selectedTeamInfo,'public')">
-            <em class="glyphicon glyphicon-align-left"></em> Public Wall
+            <em class="glyphicon glyphicon-align-left"></em> {{vmHome.domain}} Organization Wall
           </button>
-          <button class="btn btn-default" type="button" ng-click="vm.showWalls(vmHome.selectedTeamInfo,'private')">
-            <em class="glyphicon glyphicon-align-center"></em> Private Wall
+
+          <button ng-if="vmHome.team" class="btn btn-default" type="button" ng-click="vm.showWalls(vmHome.selectedTeamInfo,'private')">
+            <em class="glyphicon glyphicon-align-center"></em> {{vmHome.selectedTeamInfo.name}} Team Wall
           </button>
         </div>
       </div>
@@ -24,28 +25,40 @@
     <div class="col-md-12">
       <div class="page-header wallname">
         <h1>
-          {{vm.publicWall.name}} Wall
-          <small>{{vm.publicWall.domain}}</small>
+          {{vm.publicWall.domain}} Organization Wall
+          <small>{{vm.publicWall.name}}</small>
         </h1>
       </div>
     </div>
   </div>
 
-  <div class="row well p" ng-repeat ="post in vm.publicWall.posts">
-    <div class="col-md-12">
+  <div class="row">
+    <input type="text" placeholder="Enter the wall post title" ng-model="vm.wallPostTitle" />
+    <input type="text" placeholder="Write your post..." ng-model="vm.wallPostDescription" />
 
+    <button type="button" class="btn btn-sm btn-primary" ng-click="vm.addWallPost('public')">
+      Post it!
+    </button>
+  </div>
+
+  <div class="row well p" ng-repeat ="post in vm.publicWall.posts">
+
+    <div class="col-md-12">
         <h4 class="text-left">POST TITLE {{post.title}}</h4>
         <h4 class="text-right"> Pinned by: {{post.author}}</h4>
+
     </div>
 
     <div class="col-md-4">
       <img alt="Post Image" src="http://lorempixel.com/140/140/" class="img-thumbnail" style="width:40px;height:40px;" />
+
     </div>
     <div class="col-md-8">
       <p>
         {{post.description}}
       </p>
     </div>
+    <h6 ng-click="vm.deleteWallPost('public', $index)">Delete</h6>
   </div>
 
 </div>
@@ -65,11 +78,21 @@
     </div>
   </div>
 
+  <div class="row">
+    <input type="text" placeholder="Enter the wall post title" ng-model="vm.wallPostTitle" />
+    <input type="text" placeholder="Write your post..." ng-model="vm.wallPostDescription" />
+
+    <button type="button" class="btn btn-sm btn-primary" ng-click="vm.addWallPost('private')">
+      Post it!
+    </button>
+  </div>
+
   <div class="row well p" ng-repeat ="post in vm.privateWall.posts">
     <div class="col-md-12">
 
         <h4 class="text-left">POST TITLE {{post.title}}</h4>
         <h4 class="text-right"> Pinned by: {{post.author}}</h4>
+
     </div>
 
     <div class="col-md-4">
@@ -80,6 +103,7 @@
         {{post.description}}
       </p>
     </div>
+      <h6 ng-click="vm.deleteWallPost('private', $index)">Delete</h6>
   </div>
 
 </div>

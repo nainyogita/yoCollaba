@@ -1,12 +1,22 @@
 <!-- This template replaces the ui-view div in index.html -->
 <div class="container">
-  <div ng-hide="admin.showReq" ng-click="admin.showRequests()">
+  <div ng-click="admin.showRequests()">
+  <!-- <div ng-hide="admin.showReq" ng-click="admin.showRequests()"> -->
     <button class="btn btn-inverse btn-lg btn-register" type="button" >
       Show Requests
     </button>
+  </div>
+
+<!-- Changing value of var onClick -->
+  <div>
+    <button class="btn btn-inverse btn-lg btn-register" type="button" ng-click="admin.showOrg==true?admin.showOrg=false:admin.showOrg=true">
+      Show Organizations
+    </button>
     <br><br>
   </div>
+
   <!-- div showing pending requests for organization approval(called ON CLICK) -->
+  <!-- METHOD 1 : Custom Filter created in controller -->
   <div class="col-md-12" ng-show="admin.showReq">
     <h2>Organizations</h2>
     <br />
@@ -55,4 +65,36 @@
     <hr>
     <br />
   </div>
+
+<!-- Div showing approved Organizations -->
+<!-- METHOD 2: Filter used in html -->
+  <div class="col-md-12" ng-show="admin.showOrg">
+    <h2>Organizations</h2>
+    <br />
+    <br />
+
+    <table class="table table-striped">
+      <thead>
+        <th>Organisation Name</th>
+        <th>Domain</th>
+        <th>Owner Name</th>
+        <th>Owner Email</th>
+
+      </thead>
+      <tbody>
+        <tr ng-repeat="req in admin.originalOrg | filter: {'approvalStatus' : 'true'}">
+          <td>{{req.name}}</td>
+          <td>{{req.domain}}</td>
+          <td>{{req.owner.name}}</td>
+          <td>{{req.owner.email}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+    <hr>
+    <br />
+  </div>
+
 </div>

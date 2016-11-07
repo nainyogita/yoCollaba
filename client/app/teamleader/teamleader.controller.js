@@ -279,7 +279,7 @@ export default class TeamleaderController {
       })
       .then(() => {
         // Account created, redirect to home
-        this.$state.go('teamleader');
+        this.$state.go('teamleader.dashboard');
       })
       .catch(err => {
         err = err.data;

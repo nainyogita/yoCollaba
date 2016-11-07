@@ -19,9 +19,9 @@
             <a ui-sref="{{item.state}}">{{item.title}}</a>
         </li>
         <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
-        <li ng-show="$ctrl.isOwner()" ui-sref-active="active"><a ui-sref="owner">Owner</a></li>
+        <li ng-show="$ctrl.isOwner()" ui-sref-active="active"><a ui-sref="owner.dashboard">Owner</a></li>
         <li ng-show="$ctrl.isUser() ||$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="home">UserHome</a></li>
-        <li ng-show="$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="teamleader">Team Leader</a></li>
+        <li ng-show="$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="teamleader.dashboard">Team Leader</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

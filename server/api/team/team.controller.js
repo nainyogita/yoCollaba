@@ -253,7 +253,7 @@ export function addTeamMember(req, res) {
   var member = String(req.body.team.member);
 
   return Team.findOne({'name':teamName})
-  .populate(channel)
+  .populate("channel")
   .exec()
     .then(teamObj => {
       if(!teamObj) {

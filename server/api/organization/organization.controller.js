@@ -108,94 +108,183 @@ export function show(req, res) {
  * @param {String} email - email id of the owner
  * @return {string}
  */
-export function createTeam(req, res) {
-  var userEmail = req.params.email;
-  return Organization.findOne({'owner.email':userEmail})
-  .populate('team')
-  .exec()
-    .then(org => {
-      if(!org)
-      {
-        //If organization already exists return with status 401
-        return res.status(401).end();
-      }
+ export function createTeam(req, res) {
+   var userEmail = req.params.email;
+   return Organization.findOne({'owner.email':userEmail}).exec()
+     .then(org => {
+       if(!org)
+       {
+         //If organization already exists return with status 401
+         return res.status(401).end();
+       }
 
-      var teamObj = new Team(req.body.orgTeam.teams);
-      /**
-      *   adding team leader as a member of team created
-      *   by owner of organization
-      */
-      var teamHeads = teamObj.thead;
-      for(var i = 0 ; i<teamHeads.length ; i++){
-        teamObj.members.push(teamObj.thead[i]);
-      }
+       var teamObj = new Team(req.body.orgTeam.teams);
 
-      /**
-      * Generating a public channel for each newly created team-
-      * add team head into the public channel
-      */
-      var publicChannel = new Channel({
-            name : 'public',
-            info : 'A default channel which is public',
-            members : teamHeads,
-            type : 'public'
+       /**
+       *   adding team leader as a member of team created
+       *   by owner of organization
+       */
+       var teamHeads = teamObj.thead;
+       for(var i = 0 ; i<teamHeads.length ; i++){
+         teamObj.members.push(teamObj.thead[i]);
+       }
+
+       /**
+       * Generating a public channel for each newly created team-
+       * add team head into the public channel
+       */
+       var publicChannel = new Channel({
+             name : 'public',
+             info : 'A default channel which is public',
+             members : teamHeads,
+             type : 'public'
+       });
+
+       teamObj.channel.push(publicChannel);//Push Public channel into the Team schema
+       publicChannel.save();//save team in Organization schema
+
+       // Push the created team into the team array of Organisation schema
+       org.team.push(teamObj);
+
+       // PostData for sending emails
+             var postData = {
+                 email: '',
+                 name: '',
+                 message: 'This email is to notify you that you are now the'
+                 +' team lead of the newly formed team '+teamObj.name+'.Welcome to '
+                 +'the Gabfest family!!',
+                 password:''
+               };
+
+       /*
+       * save team in user table for owner
+       */
+         for(let i = 0; i < teamObj.thead.length; i++){
+           User.findOne({'email':teamObj.thead[i]}).exec()
+           .then(user =>{
+             if(!user) {
+               var user = new User({
+                 'email' : teamObj.thead[i],
+                 'password' : 'password',
+                 'provider' : 'local'
+               });
+
+             }
+             else{
+               //use existing password for already registered users
+               postData.password = 'ur existing password';
+             }
+             //json key values for sending email
+             postData.name = teamObj.thead[i];
+             postData.email = teamObj.thead[i];
+
+             user.team.push(teamObj);
+             user.channel.push(publicChannel);
+             user.organization.push(org);
+             user.role = "thead";
+             user.save();
+
+             emailFunction(postData);// Call email function to send the email to the user
+           });
+         }// for loop ends here
+
+       teamObj.save();//save team in teams table
+
+       //save team in Organization schema
+         return org.save()
+           .then(() => {
+             res.status(204).end();
+           });
       });
-
-      teamObj.channel.push(publicChannel);//Push Public channel into the Team schema
-      publicChannel.save();//save team in Organization schema
-
-      // Push the created team into the team array of Organisation schema
-      org.team.push(teamObj);
-      // PostData for sending emails
-            var postData = {
-                email: '',
-                name: '',
-                message: 'This email is to notify you that you are now the'
-                +' team lead of the newly formed team '+teamObj.name+'.Welcome to '
-                +'the gabfest family!!',
-                password:''
-              };
-
-      /*
-      * save team in user table for owner
-      */
-        for(let i = 0; i < teamObj.thead.length; i++){
-          User.findOne({'email':teamObj.thead[i]}).exec()
-          .then(user =>{
-            if(!user) {
-              var user = new User({
-                'email' : teamObj.thead[i],
-                'password' : 'password',
-                'provider' : 'local'
-              });
-
-            }
-            else{
-              //use existing password for already registered users
-              postData.password = 'ur existing password';
-            }
-            //json key values for sending email
-            postData.name = teamObj.thead[i];
-            postData.email = teamObj.thead[i];
-
-            user.team.push(teamObj);
-            user.channel.push(publicChannel);
-            user.organization.push(org);
-            user.role = "thead";
-            user.save();
-
-            emailFunction(postData);// Call email function to send the email to the user
-          });
-        }// for loop ends here
-
-
-      teamObj.save();//save team in teams table
-
-      //save team in Organization schema
-      org.save();
-     })
-     .then(respondWithResult(res));
-}
+ }
+// export function createTeam(req, res) {
+//   var userEmail = req.params.email;
+//   return Organization.findOne({'owner.email':userEmail})
+//   .populate('team')
+//   .exec()
+//     .then(org => {
+//       if(!org)
+//       {
+//         //If organization already exists return with status 401
+//         return res.status(401).end();
+//       }
+//
+//       var teamObj = new Team(req.body.orgTeam.teams);
+//       /**
+//       *   adding team leader as a member of team created
+//       *   by owner of organization
+//       */
+//       var teamHeads = teamObj.thead;
+//       for(var i = 0 ; i<teamHeads.length ; i++){
+//         teamObj.members.push(teamObj.thead[i]);
+//       }
+//
+//       /**
+//       * Generating a public channel for each newly created team-
+//       * add team head into the public channel
+//       */
+//       var publicChannel = new Channel({
+//             name : 'public',
+//             info : 'A default channel which is public',
+//             members : teamHeads,
+//             type : 'public'
+//       });
+//
+//       teamObj.channel.push(publicChannel);//Push Public channel into the Team schema
+//       publicChannel.save();//save team in Organization schema
+//
+//       // Push the created team into the team array of Organisation schema
+//       org.team.push(teamObj);
+//       // PostData for sending emails
+//             var postData = {
+//                 email: '',
+//                 name: '',
+//                 message: 'This email is to notify you that you are now the'
+//                 +' team lead of the newly formed team '+teamObj.name+'.Welcome to '
+//                 +'the gabfest family!!',
+//                 password:''
+//               };
+//
+//       /*
+//       * save team in user table for owner
+//       */
+//         for(let i = 0; i < teamObj.thead.length; i++){
+//           User.findOne({'email':teamObj.thead[i]}).exec()
+//           .then(user =>{
+//             if(!user) {
+//               var user = new User({
+//                 'email' : teamObj.thead[i],
+//                 'password' : 'password',
+//                 'provider' : 'local'
+//               });
+//
+//             }
+//             else{
+//               //use existing password for already registered users
+//               postData.password = 'ur existing password';
+//             }
+//             //json key values for sending email
+//             postData.name = teamObj.thead[i];
+//             postData.email = teamObj.thead[i];
+//
+//             user.team.push(teamObj);
+//             user.channel.push(publicChannel);
+//             user.organization.push(org);
+//             user.role = "thead";
+//             user.save();
+//
+//             emailFunction(postData);// Call email function to send the email to the user
+//           });
+//         }// for loop ends here
+//
+//
+//       teamObj.save();//save team in teams table
+//
+//       //save team in Organization schema
+//       org.save();
+//      })
+//      .then(respondWithResult(res));
+// }
 
 
 /**

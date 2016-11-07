@@ -114,7 +114,7 @@ export default class AdminController {
       name: owner.name,
       message: 'This email is to notify you that your request for'+
       ' registering your Organization has been accepted.Welcome to '
-      +'the Gabfest family!!',
+      +'the gabfest family!!',
       password:'owner'
     };
 

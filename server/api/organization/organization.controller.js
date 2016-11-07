@@ -152,7 +152,7 @@ export function createTeam(req, res) {
                 name: '',
                 message: 'This email is to notify you that you are now the'
                 +' team lead of the newly formed team '+teamObj.name+'.Welcome to '
-                +'the Gabfest family!!',
+                +'the gabfest family!!',
                 password:''
               };
 

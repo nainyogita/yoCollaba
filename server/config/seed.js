@@ -78,24 +78,36 @@ import Organization from '../api/organization/organization.model';
 // Password for admin : admin
 // Password for other users : user
 //
-User.find({})
+// User.find({})
+//   .then(() => {
+//     User.create(
+//       // {
+//       //   provider: 'local',
+//       //   name: 'Test User',
+//       //   email: 'test@example.com',
+//       //   password: 'test'
+//       // },
+//       {
+//         provider: 'local',
+//         role: 'admin',
+//         name: 'Admin',
+//         email: 'admin@gabfest.com',
+//         password: 'admin',
+//         status: true
+//       });
+//   });
+User.find({name:'Atul'}).remove()
   .then(() => {
-    User.create(
-      // {
-      //   provider: 'local',
-      //   name: 'Test User',
-      //   email: 'test@example.com',
-      //   password: 'test'
-      // },
-      {
-        provider: 'local',
-        role: 'admin',
-        name: 'Admin',
-        email: 'admin@collaba.com',
-        password: 'admin',
-        status: true
-      });
+    User.create({
+
+           provider : 'local',
+           name : 'Atul',
+           email : 'atul@niit-tech.com',
+           status : true,
+           role : 'thead',
+           password:'aaa'
   });
+});
 //      , {
 //         provider: 'local',
 //         role: 'owner',

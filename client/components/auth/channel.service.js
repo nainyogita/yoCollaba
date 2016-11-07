@@ -12,6 +12,12 @@ export function ChannelResource($resource) {
       params: {
         controller:'addChannel'
       }
+    },
+    updateChannel: {
+      method : 'PUT',
+      params: {
+        controller:'updateChannel'
+      }
     }
   });
 }

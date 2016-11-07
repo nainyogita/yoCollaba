@@ -10,7 +10,7 @@ import wall from './wall';
 import home from './home';
 import oauthButtons from '../../components/oauth-buttons';
 
-export default angular.module('yoCollabaApp.user', [uiRouter, chat, wall, home,
+export default angular.module('gabfestApp.user', [uiRouter, chat, wall, home,
     oauthButtons
   ])
   .config(routing)

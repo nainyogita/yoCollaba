@@ -3,26 +3,50 @@
 	<div class="row">
 		<!-- display teams and channels under a particular team leader  -->
 		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-			<!-- TODO: To display one team according to user choice -->
-			<!-- <div class="row">
-					Select Team:
-				<div>
-					<select name = "teamChoice" id = "teamChoice"
-					ng-options = " team.name for team in teamleader.teamInfo "
-					ng-model = "displayTeam">
-					</select>
-				</div>
-			</div> -->
-			Team wise channels
-			<ul class="list-group" ng-repeat='teams in teamleader.teamInfo | filter:displayTeam'>
-			  <li class="list-group-item active" ><b>{{teams.name}}</b></li>
-				<li class="list-group-item" >
-					<ul class="list-group" ng-repeat='channels in teams.channel'>
-						<li class="list-group-item" >{{channels.name}}
-						<span class="badge">{{channels.members.length}} member</span></li>
+			Select Team :<select name = "teamSelectShow" id = "mySelectShow"
+			ng-options = " team.name for team in teamleader.teamInfo"
+			ng-model = "teamleader.selectedOptionToShow"
+			ng-change = "teamleader.getChannels(teamleader.teamInfo)">
+			</select>
+			<br />
+			Select Channel : <select name = "channelSelectShow" id = "mySelectChannel"
+			ng-options = "channel.name for channel in teamleader.channelList "
+			ng-model = " teamleader.channelShown"
+			ng-change = "teamleader.displayChannel(teamleader.channelList)">
+			</select>
+			<br />
+			<div class="col-md-12">
+				<!-- Isolate display:inline from here -->
+				Name : <div contenteditable = "false" class = "inline" ng-model = "teamleader.channelBlob.name">{{teamleader.channelBlob.name}}</div>
+				<br />
+				Description : <div contenteditable = "false" class = "inline" ng-model = "teamleader.channelBlob.info">{{teamleader.channelBlob.info}}</div>
+				<br />
+				Members :
+				<div style = "display:inline">
+					<ul>
+						<li ng-repeat = "people in teamleader.channelBlob.members">
+							{{ people }}
+						</li>
 					</ul>
-				</li>
-			</ul>
+				</div>
+				<button type="button" class="btn btn-primary" ng-click="teamleader.showEditableBoxes()" ng-show="teamleader.modeOff">
+					Edit
+				</button>
+				<button type = "button" class = "btn btn-success" ng-click="teamleader.lockEditableBoxes()" ng-show="teamleader.modeOn">
+					Save
+				</button>
+				<button type = "button" class = "btn btn-danger" ng-click="teamleader.rejectEditableBoxes()" ng-show="teamleader.modeOn">
+					Reject
+				</button>
+				<div ng-dropdown-multiselect="" options="teamleader.membersList" selected-model="teamleader.membersListSelected"
+				extra-settings = "{ scrollable: true, enableSearch: true };" ng-show="teamleader.modeOn" class = "inline"></div>
+				<div ng-show = "teamleader.modeOn">
+					Members added :
+					<div ng-repeat = "member in teamleader.getTrimmed(teamleader.membersListSelected)" class = "label label-default">
+						{{member}}
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12"></div>
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

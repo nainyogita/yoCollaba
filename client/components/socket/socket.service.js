@@ -22,6 +22,7 @@ function Socket(socketFactory) {
     socket,
 
     onlineUsers(user) {
+      console.log('hiiiiii');
       socket.emit('add:onlineUsers', user);
     },
 
@@ -43,7 +44,29 @@ function Socket(socketFactory) {
       console.log(data);
       socket.emit('room:sendMessage', data);
     },
+    /**
+         * Checks if the user is typing
+         * @param  {Object} data JSON data from chat
+         *
+         */
+        checkTyping(data){
+          socket.emit('room:checkTyping',data);
+          setTimeout(function(){
+            data.message='';
+            data.sender='';
+            socket.emit('room:checkTyping',data);
+          },3000);
+        },
 
+        /**
+         * Sends it to the HTML
+         * @param  {Function} cb Callback function
+         */
+        syncTyping(cb){
+          socket.on('room:checkTyping',function(data){
+            cb(data);
+          });
+        },
     syncUpdateChat(cb) {
       socket.on('room:sendMessage', function(data) {
         console.log("Get info:" + data);
@@ -115,6 +138,6 @@ function Socket(socketFactory) {
   };
 }
 
-export default angular.module('yoCollabaApp.socket', [])
-  .factory('socket', Socket)
-  .name;
+export default angular.module('gabfestApp.socket', [])
+.factory('socket', Socket)
+.name;

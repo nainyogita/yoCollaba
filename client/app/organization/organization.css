@@ -1,0 +1,19 @@
+.abc{
+  height:100%;
+
+}
+.transparent-org{
+  position:relative;
+  top:20%;
+  bottom: 20%;
+  height: 60%;
+  vertical-align: middle;
+  background: rgba(255,255,255, 0.5);
+  padding:2%;
+}
+.hero-login{
+  background-image: url('https://il5.picdn.net/shutterstock/videos/12178598/thumb/10.jpg');
+  background-size: cover;
+  height: 100%;
+
+}

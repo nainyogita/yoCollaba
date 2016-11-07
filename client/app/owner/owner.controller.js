@@ -19,30 +19,29 @@ org : Org = {
   }
 };
 
-  errors = {
-    // whatever we will req for example -->
-    //login: undefined
-  };
+  errors = {};
   submitted = false;
   Auth;
   $state;
   Owner;
   organization;
-  name;
-  email;
+  name;  // name of the logged in user
+  email; // EMAIL id of the logged in user
   resp;
-  arr;
   head;
+
   /*@ngInject*/
   constructor(Auth, $state, $http, Owner, User) {
     this.Auth = Auth;
     this.$state = $state;
     this.$http = $http;
     this.Owner = Owner;
-    this.name = Auth.getCurrentUserSync().name;
-    this.email = Auth.getCurrentUserSync().email;
-    Owner.getTeam({'email' : this.email}).$promise.then((data) => {
-      this.organization = data;
+
+    // this.name = Auth.getCurrentUserSync().name;
+    this.Auth.getCurrentUserSync().$promise.then(data =>{
+      Owner.getTeam({'email' : data.email}).$promise.then((ownerData) => {
+        this.organization = ownerData;
+      });
     });
   }
 
@@ -59,36 +58,18 @@ org : Org = {
   }
 
 
-  // To add an new team
+  /**
+  *  To add an new team
+  *  @param {Json} form
+  */
   addTeam(form) {
     this.submitted = true;
-
+  
     if(form.$valid) {
       return this.Auth.createTeam({
         teams: this.org.teams
       })
-        .then(() => {
-          //Call the email API defined in server/app.js
-          for(var i=0 ; i<this.org.teams.thead.length ; i++){
-            //JSON object containing info used for sedning mail
-            var postData = {
-              email:this.org.teams.thead[i],
-              name:this.org.teams.thead[i],
-              password:'thead',
-              message:'Request to join the team'
-            };
-
-            this.$http.post('/email', postData)
-                .success(function(data) {
-                  // Show success message
-
-                })
-                .error(function(data) {
-                  // Show error message
-
-                });
-
-          }
+        .then((data) => {
 
           //Create Team Wall
           var teamWall = {
@@ -100,9 +81,8 @@ org : Org = {
 
           });
 
-
           // Account created, redirect to home
-          this.$state.go('owner');
+          this.$state.go('owner.dashboard');
         })
         .catch(err => {
           err = err.data;
@@ -116,18 +96,26 @@ org : Org = {
     }
   }
 
-  // Delete a team
-  /*TODO : on click delete the data is getting deleted from db but it shud
-   be removed from page as well so the arr org teams dat will be created needs
-   to be spliced --- it has been commented down
-   */
+  /**
+  *  Delete a team
+  *  @param {string} teamName - name of the team to be deleted
+  */
   delete(teamName) {
     return this.Auth.deleteTeam({
       teamName: teamName
     })
       .then(() => {
-        // Account created, redirect to home
-        this.$state.go('owner');
+
+        for(var i=0;i<this.organization.team.length ; i++){
+          if(this.organization.team[i].name == teamName)
+          {
+            this.organization.team.splice(i,1);
+            break;
+          }
+        }
+
+        // Team deleted, redirect to home
+        this.$state.go('owner.dashboard');
       })
       .catch(err => {
         err = err.data;

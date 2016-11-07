@@ -2,7 +2,7 @@
 
 describe('Component: OrganizationComponent', function() {
   // load the controller's module
-  beforeEach(module('yoCollabaApp.organization'));
+  beforeEach(module('gabfestApp.organization'));
 
   var OrganizationComponent;
 

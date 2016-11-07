@@ -15,6 +15,7 @@ import Organization from './organization.model';
 import Team from '../team/team.model';
 import User from '../user/user.model';
 import Channel from '../channel/channel.model';
+var emailFunction = require('../user/email.js');
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -66,9 +67,17 @@ function handleError(res, statusCode) {
   };
 }
 
-// Retrieve data abt the logged in owner
+/**
+ * Retrieve data about the logged in owner
+ * @param  {Object} req A request Object in JSON format
+ * @param  {Object} res A response Object in JSON format
+ * @return {Function}     Promise function
+ */
 export function owner(req, res) {
-  //Retrieve the email - id from the query of the request
+  /**
+   * Email - id from the query of the request
+   * @type {String}
+   */
   var email = req.params.email;
   return Organization.findOne({'owner.email' : email})
     .populate('team')
@@ -92,26 +101,39 @@ export function show(req, res) {
     .catch(handleError(res));
 }
 
-// Create a new team
+/**
+ * A new team created by the owner of organization
+ * @param  {json} req team json to be created
+ * @param  {json} res org updated
+ * @param {String} email - email id of the owner
+ * @return {string}
+ */
 export function createTeam(req, res) {
   var userEmail = req.params.email;
-  return Organization.findOne({'owner.email':userEmail}).exec()
+  return Organization.findOne({'owner.email':userEmail})
+  .populate('team')
+  .exec()
     .then(org => {
       if(!org)
       {
+        //If organization already exists return with status 401
         return res.status(401).end();
       }
 
       var teamObj = new Team(req.body.orgTeam.teams);
-      /** adding team leader as a member of team created
+      /**
+      *   adding team leader as a member of team created
       *   by owner of organization
       */
-
       var teamHeads = teamObj.thead;
       for(var i = 0 ; i<teamHeads.length ; i++){
         teamObj.members.push(teamObj.thead[i]);
       }
 
+      /**
+      * Generating a public channel for each newly created team-
+      * add team head into the public channel
+      */
       var publicChannel = new Channel({
             name : 'public',
             info : 'A default channel which is public',
@@ -119,57 +141,76 @@ export function createTeam(req, res) {
             type : 'public'
       });
 
-      teamObj.channel.push(publicChannel);
-      publicChannel.save();
-      //save team in Organization schema
-      org.team.push(teamObj);
+      teamObj.channel.push(publicChannel);//Push Public channel into the Team schema
+      publicChannel.save();//save team in Organization schema
 
-      // save team in user table for owner
-      for(var i = 0 ; i<teamObj.thead.length ; i++){
-        var email = teamObj.thead[i].trim();
-        User.findOne({
-            'email' : email
-          })
-          .exec()
-          .then(user => {
-            // if not a registered user then add to the database
-            // with credentials - email
-            if(!user){
-              user = new User({
-                'email' : email,
+      // Push the created team into the team array of Organisation schema
+      org.team.push(teamObj);
+      // PostData for sending emails
+            var postData = {
+                email: '',
+                name: '',
+                message: 'This email is to notify you that you are now the'
+                +' team lead of the newly formed team '+teamObj.name+'.Welcome to '
+                +'the Gabfest family!!',
+                password:''
+              };
+
+      /*
+      * save team in user table for owner
+      */
+        for(let i = 0; i < teamObj.thead.length; i++){
+          User.findOne({'email':teamObj.thead[i]}).exec()
+          .then(user =>{
+            if(!user) {
+              var user = new User({
+                'email' : teamObj.thead[i],
                 'password' : 'password',
                 'provider' : 'local'
               });
+
             }
+            else{
+              //use existing password for already registered users
+              postData.password = 'ur existing password';
+            }
+            //json key values for sending email
+            postData.name = teamObj.thead[i];
+            postData.email = teamObj.thead[i];
+
             user.team.push(teamObj);
             user.channel.push(publicChannel);
             user.organization.push(org);
             user.role = "thead";
             user.save();
+
+            emailFunction(postData);// Call email function to send the email to the user
           });
-      }
+        }// for loop ends here
 
-      //save team in teams table
-      teamObj.save();
 
+      teamObj.save();//save team in teams table
 
       //save team in Organization schema
-        return org.save()
-          .then(() => {
-            res.status(204).end();
-          });
-    });
+      org.save();
+     })
+     .then(respondWithResult(res));
 }
+
 
 /**
 * Delete a team
+* @param {string} email - email id of the owner logged in
 */
 export function deleteTeam(req, res) {
   var userEmail = req.params.email;
   var teamName = String(req.body.orgTeam.teamName);
-  Team.findOne({'name':teamName}).exec()
+  return Team.findOne({'name':teamName})
+  .populate('channel')
+  .exec()
   .then(teamObj => {
-    return Organization.findOne({'owner.email':userEmail}).exec()
+    Organization.findOne({'owner.email':userEmail})
+    .exec()
       .then(org => {
         //list of all the channels that were part of the deleted team
         var teamChannels = teamObj.channel;
@@ -196,28 +237,29 @@ export function deleteTeam(req, res) {
           }
         //delete team from organization schema
         org.team.splice(org.team.indexOf(teamObj._id), 1);
-          return org.save()
-            .then(() => {
-              res.status(204).end();
-            })
-            .catch(handleError(res));
+        //save updated organization schema
+        org.save()
+        .then(()=>{
+          res.sendStatus(200);
+        });
       });
   });
+
 }
 
 
 
 // Creates a new Organization in the DB
 export function create(req, res) {
- return Organization.findOne({owner : req.body.owner}).exec()
+ Organization.findOne({owner : req.body.owner}).exec()
    .then((data) => {
      if(data != null){
-       // Exists, so send error it
-       res.send("EXISTS");
+      res.send("EXISTS");
      }
      else{
-       Organization.create(req.body);
-       res.send("NO");
+       return Organization.create(req.body).then(() => {
+         res.send("NO");
+       });
      }
    })
    .catch(handleError(res));

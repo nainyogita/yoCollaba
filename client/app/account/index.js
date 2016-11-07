@@ -9,7 +9,7 @@ import settings from './settings';
 import signup from './signup';
 import oauthButtons from '../../components/oauth-buttons';
 
-export default angular.module('yoCollabaApp.account', [uiRouter, login, settings, signup,
+export default angular.module('gabfestApp.account', [uiRouter, login, settings, signup,
     oauthButtons
   ])
   .config(routing)
@@ -17,7 +17,7 @@ export default angular.module('yoCollabaApp.account', [uiRouter, login, settings
     'ngInject';
 
     $rootScope.$on('$stateChangeStart', function(event, next, nextParams, current) {
-      if (next.name === 'logout' && current && current.name && !current.authenticate) {
+      if(next.name === 'logout' && current && current.name && !current.authenticate) {
         next.referrer = current.name;
       }
     });

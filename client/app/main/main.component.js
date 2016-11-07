@@ -40,7 +40,7 @@ export class MainController {
   }
 }
 
-export default angular.module('yoCollabaApp.main', [uiRouter])
+export default angular.module('gabfestApp.main', [uiRouter])
   .config(routing)
   .component('main', {
     template: require('./main.html'),

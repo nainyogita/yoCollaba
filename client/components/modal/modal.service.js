@@ -73,6 +73,6 @@ export function Modal($rootScope, $uibModal) {
   };
 }
 
-export default angular.module('yoCollabaApp.Modal', [])
+export default angular.module('gabfestApp.Modal', [])
   .factory('Modal', Modal)
   .name;

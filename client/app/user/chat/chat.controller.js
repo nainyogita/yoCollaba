@@ -45,21 +45,28 @@ export default class ChatController {
   message = '';
   chatHistory = [];
   emojiList;
+  TeamLeader;
+  allowLeaving;
+  typing;
+
 
   /*@ngInject*/
-  constructor(Auth, $state, socket, Upload, $http, $scope, Notification, Emoji) {
+  constructor(Auth, $state, socket, Upload, $http, $scope, Notification, Emoji,TeamLeader) {
 
     this.socket = socket;
     this.Auth = Auth;
     this.$state = $state;
     this.$http = $http;
     this.messagegreet = 'Chat ChatController';
+    this.TeamLeader = TeamLeader;
+    this.allowLeaving = true;
     this.Upload = Upload;
     this.chShow = false;
     this.progressVisible = false;
     this.pc = false;
     this.Notification = Notification;
     this.pinned = false;
+    this.typing = '';
 
     this.team = $scope.$parent.vmHome.selectedTeamInfo;
 
@@ -95,7 +102,7 @@ export default class ChatController {
         angular.forEach(this.onlineUsers, (ou) => {
 
           var room = '';
-          if (ou.name.charAt(0) < this.user.name.charAt(0)) {
+          if (ou.name.charAt(0) <= this.user.name.charAt(0)) {
             room = ou.email + "-" + this.user.email;
           } else {
             room = this.user.email + "-" + ou.email;
@@ -119,6 +126,12 @@ export default class ChatController {
           });
         }
       });
+
+      // Typing... feature
+    this.socket.syncTyping(data => {
+      this.typing=data.sender+" "+data.message;
+    });
+
     });
   }
 
@@ -150,21 +163,28 @@ export default class ChatController {
     this.chatHistory[index].hide = !this.chatHistory[index].hide;
   }
 
-  //Show all channels of the team selected
-  showChannels(teamInfo) {
-    this.chShow = true;
+  /**
+  *Show all channels of the team selected
+  */
+  showChannels(teamInfo){
+    this.chShow=true;
     this.selectedTeamInfo = teamInfo;
 
     //Get the domain of organization from thead domain
     this.domain = (this.selectedTeamInfo.thead[0]).split('@');
-    this.domain = this.domain[this.domain.length - 1];
+    this.domain = this.domain[this.domain.length-1];
+
 
     //Get channels which are part of this team
     this.channels = this.selectedTeamInfo.channel;
-
+    var isHead = this.selectedTeamInfo.thead.indexOf(this.user.email);
+    if(isHead!=-1){
+      this.allowLeaving = false;
+    }
     this.filterPrivateChannelByMember();
     this.filterPublicChannel();
   }
+
 
   //Filter private Channels, filter private channels of the member
   filterPrivateChannelByMember() {
@@ -197,6 +217,24 @@ export default class ChatController {
       console.log(room);
     });
   };
+
+  /**
+    *   A channel member leaves the channel
+    *   @param {String} channel The channel from which user wants to exit
+    */
+
+    leaveGroup(channel){
+      this.user.email;  // current user email id
+      var leave = {
+        'team' :this.selectedTeamInfo,
+        'channel':channel
+      };
+
+      this.TeamLeader.leaveGroup({'email' : this.user.email},
+        {leave}).$promise.then((data) => {
+        this.$state.go('home');
+      });
+    }
 
   //TODO: Refactor code to service
   //Get all walls from the walls db
@@ -299,7 +337,7 @@ export default class ChatController {
     this.participants.push(this.user);
 
     //Generate a common room name
-    if (ou.name.charAt(0) < this.user.name.charAt(0)) {
+    if (ou.name.charAt(0) <= this.user.name.charAt(0)) {
       this.roomName = ou.email + "-" + this.user.email;
     } else {
       this.roomName = this.user.email + "-" + ou.email;
@@ -346,6 +384,19 @@ export default class ChatController {
       }
     });
   };
+
+  /**
+   * Checks if user is typing
+   */
+   isTyping(){
+
+     this.socket.checkTyping({
+       'sender':this.user.name,
+       'message': 'is typing',
+       'room' : this.roomName
+     });
+   }
+
 
   sendMessage() {
     this.pinned = false;

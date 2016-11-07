@@ -9,6 +9,9 @@ import ngFileUpload from 'ng-file-upload';
 import uiNotification from 'angular-ui-notification';
 import 'angular-socket-io';
 
+import 'angularjs-dropdown-multiselect';
+import 'lodash';
+
 import uiRouter from 'angular-ui-router';
 import uiBootstrap from 'angular-ui-bootstrap';
 // import ngMessages from 'angular-messages';
@@ -35,13 +38,45 @@ import socket from '../components/socket/socket.service';
 
 import './app.css';
 
-angular.module('yoCollabaApp', [ngCookies, ngResource, ngSanitize,
-    'btford.socket-io', uiRouter, uiBootstrap,
-    _Auth, account, admin, owner, teamleader,
-    navbar, user, footer, main,
-    constants, socket, util,
-    organization, ngFileUpload, uiNotification
+angular.module('gabfestApp', [ngCookies, ngResource, ngSanitize,
+  'btford.socket-io', uiRouter, uiBootstrap,
+   _Auth, account, admin, owner, teamleader,
+   navbar,user, footer, main,
+   constants, socket, util,
+   organization, ngFileUpload, uiNotification,
+   'angularjs-dropdown-multiselect'
   ])
+  .directive('contenteditable', ['$sce', function($sce) {
+     return {
+       restrict: 'A', // only activate on element attribute
+       require: '?ngModel', // get a hold of NgModelController
+       link: function(scope, element, attrs, ngModel) {
+         if (!ngModel) return; // do nothing if no ng-model
+
+         // Specify how UI should be updated
+         ngModel.$render = function() {
+           element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+         };
+
+         // Listen for change events to enable binding
+         element.on('blur keyup change', function() {
+           scope.$evalAsync(read);
+         });
+         read(); // initialize
+
+         // Write data to the model
+         function read() {
+           var html = element.html();
+           // When we clear the content editable the browser leaves a <br> behind
+           // If strip-br attribute is provided then we strip this out
+           if ( attrs.stripBr && html == '<br>' ) {
+             html = '';
+           }
+           ngModel.$setViewValue(html);
+         }
+       }
+     }
+   }])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
     'ngInject';
@@ -49,7 +84,7 @@ angular.module('yoCollabaApp', [ngCookies, ngResource, ngSanitize,
 
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {
-        if (next.authenticate && !loggedIn) {
+        if(next.authenticate && !loggedIn) {
           $location.path('/login');
         }
       });
@@ -58,7 +93,7 @@ angular.module('yoCollabaApp', [ngCookies, ngResource, ngSanitize,
 
 angular.element(document)
   .ready(() => {
-    angular.bootstrap(document, ['yoCollabaApp'], {
+    angular.bootstrap(document, ['gabfestApp'], {
       strictDi: true
     });
   });

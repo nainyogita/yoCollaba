@@ -76,6 +76,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @return {Promise}
      */
     createUser(user, callback ? : Function) {
+
       return User.save(user, function(data) {
         $cookies.put('token', data.token);
         currentUser = User.get();
@@ -144,10 +145,11 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
      * @param  {Function} callback    - function(error, user)
      * @return {Promise}
      */
-    changePassword(oldPassword, newPassword, callback ? : Function) {
+    changePassword(oldPassword, newPassword, username, callback ? : Function) {
       return User.changePassword({
         id: currentUser._id
       }, {
+        username,
         oldPassword,
         newPassword
       }, function() {

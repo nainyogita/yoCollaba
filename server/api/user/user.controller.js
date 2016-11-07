@@ -56,21 +56,20 @@ export function create(req, res) {
             });
           })
           .catch(validationError(res));
-      } else {
-        userObj.status = true;
-        userObj.save()
-          .then(function(user) {
-            var token = jwt.sign({
-              _id: user._id
-            }, config.secrets.session, {
-              expiresIn: 60 * 60 * 5
-            });
-            res.json({
-              token
-            });
-          })
-          .catch(validationError(res));
-      }
+      }   else{
+
+      userObj.status = true;
+      userObj.password = newUser.password;
+      userObj.name = newUser.name;
+      userObj.save()
+      .then(function(user) {
+        var token = jwt.sign({ _id: user._id }, config.secrets.session, {
+          expiresIn: 60 * 60 * 5
+        });
+        res.json({ token });
+      })
+      .catch(validationError(res));
+    }
     });
 }
 
@@ -128,26 +127,28 @@ export function destroy(req, res) {
 /**
  * Change a users password
  */
-export function changePassword(req, res) {
-  var userId = req.user._id;
-  var oldPass = String(req.body.oldPassword);
-  var newPass = String(req.body.newPassword);
+ export function changePassword(req, res) {
+   var userId = req.user._id;
+   var username = String(req.body.username);
+   var oldPass = String(req.body.oldPassword);
+   var newPass = String(req.body.newPassword);
 
-  return User.findById(userId).exec()
-    .then(user => {
-      if (user.authenticate(oldPass)) {
-        user.password = newPass;
-        return user.save()
-          .then(() => {
-            res.status(204).end();
-          })
-          .catch(validationError(res));
-      } else {
-        return res.status(403).end();
-      }
-    });
-}
-
+   return User.findById(userId).exec()
+   .then(user => {
+     if(user.authenticate(oldPass)) {
+       user.password = newPass;
+       user.name = username;
+       return user.save()
+       .then(() => {
+         res.status(204).end();
+       })
+       .catch(validationError(res));
+     } else {
+       return res.status(403).end();
+     }
+   });
+ }
+ 
 /**
  * Get user details from user email
  */

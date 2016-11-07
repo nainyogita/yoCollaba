@@ -10,7 +10,7 @@ export function OauthButtonsController($window) {
   };
 }
 
-export default angular.module('yoCollabaApp.oauthButtons', [])
+export default angular.module('gabfestApp.oauthButtons', [])
   .directive('oauthButtons', function() {
     return {
       template: require('./oauth-buttons.html'),

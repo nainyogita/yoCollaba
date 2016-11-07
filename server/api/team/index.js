@@ -9,10 +9,11 @@ router.get('/',auth.isAuthenticated(), controller.index);
 router.get('/:id',auth.isAuthenticated(), controller.show);
 router.get('/:email/getTeams',auth.isAuthenticated(), controller.getTeams);
 router.get('/:email/getUserTeams',auth.isAuthenticated(), controller.getUserTeams);
-router.post('/', controller.create);
-router.post('/teamEdit',controller.teamEdit);
+router.post('/',auth.hasRole('thead'), controller.create);
+router.post('/teamEdit',auth.hasRole('thead'),controller.teamEdit);//
 router.put('/:id',auth.isAuthenticated(), controller.upsert);
-router.put('/:email/addTeamMember',auth.isAuthenticated(), controller.addTeamMember);
+router.put('/:email/leaveGroup',auth.isAuthenticated(), controller.leaveGroup);//
+router.put('/:email/addTeamMember',auth.hasRole('thead'), controller.addTeamMember);//
 router.patch('/:id',auth.isAuthenticated(), controller.patch);
 router.delete('/:id',auth.isAuthenticated(), controller.destroy);
 

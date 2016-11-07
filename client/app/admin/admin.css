@@ -1,5 +1,14 @@
 .trash { color:rgb(209, 91, 71); }
 
+/* true false clsses are for organization registration status*/
+.true{
+	background-color: #ccc;
+}
+
+.false{
+	background-color: white;
+}
+
 .user-list li {
 	display: flex;
 	border: none;

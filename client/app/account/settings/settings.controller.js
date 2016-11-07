@@ -2,6 +2,7 @@
 // @flow
 
 type User = {
+  username: string,
   oldPassword: string;
   newPassword: string;
   confirmPassword: string;
@@ -9,6 +10,7 @@ type User = {
 
 export default class SettingsController {
   user: User = {
+    username: '',
     oldPassword: '',
     newPassword: '',
     confirmPassword: ''
@@ -23,6 +25,7 @@ export default class SettingsController {
   /*@ngInject*/
   constructor(Auth) {
     this.Auth = Auth;
+    this.user.username = Auth.getCurrentUserSync().name;
   }
 
   /**
@@ -32,9 +35,10 @@ export default class SettingsController {
     this.submitted = true;
 
     if(form.$valid) {
-      this.Auth.changePassword(this.user.oldPassword, this.user.newPassword)
+      this.Auth.changePassword(this.user.oldPassword, this.user.newPassword,this.user.username)
         .then(() => {
-          this.message = 'Password successfully changed.';
+          this.Auth.getCurrentUserSync().name = this.user.username;
+          this.message = 'Credentials successfully changed.';
         })
         .catch(() => {
           form.password.$setValidity('mongoose', false);

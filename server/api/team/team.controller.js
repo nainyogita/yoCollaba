@@ -14,6 +14,7 @@ import jsonpatch from 'fast-json-patch';
 import Team from './team.model';
 import User from '../user/user.model';
 import Channel from '../channel/channel.model';
+var emailFunction = require('../user/email.js');
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -65,7 +66,67 @@ function handleError(res, statusCode) {
   };
 }
 
-//function for editing team information
+
+/**
+ * Function to leave from a channel group
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ * @return {function}  promise
+ */
+export function leaveGroup(req,res){
+
+  var leaveChannel = req.body.leave.channel;
+  var userEmail = req.params.email;
+
+  return Channel.findById(leaveChannel._id).exec()
+    .then(channelObj =>{
+
+      if(!channelObj){
+        return res.status(401).end();
+      }
+
+      var members = channelObj.members; // lists all members of the channel
+      var find = members.indexOf(userEmail); // find index of current user to be removed
+      if(find!=-1)
+      {
+        members.splice(find,1); // remove current user
+      }
+
+      channelObj.members = members; //update the member array of channel schema
+      channelObj.save()
+                .then(() => {
+                  respondWithResult(res);
+                });
+
+      // Remove the channel from current user schema entry
+      User.findOne({'email':userEmail}).exec()
+      .then(userObj =>{
+        var userChannel = userObj.channel;
+
+        var find = userChannel.indexOf(leaveChannel._id);
+        if(find != -1){
+          userChannel.splice(find,1);
+        }
+
+       userObj.channel = userChannel;
+        userObj.save()
+        .then(() => {
+          respondWithResult(res);
+        });
+
+      })
+      .catch(handleError(res));
+    })
+    .catch(handleError(res));
+}
+
+
+/**
+ * function for editing team information
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ * @return {function}  promise
+ */
 export function teamEdit(req,res){
   var team = req.body.JSON;
   return Team.findById(team.id).exec()
@@ -84,7 +145,13 @@ export function teamEdit(req,res){
     .catch(handleError(res));
   }
 
-// Gets a list of Teams
+
+/**
+ * Gets a list of teams the team leader is a part of
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ * @return {function}  promise
+ */
 export function getTeams(req,res){
   var email = req.params.email;
   return Team.find({'thead' : email})
@@ -121,6 +188,12 @@ export function show(req, res) {
 
 // Creates a new Team in the DB
 // TODO: Add the teamleader into the user schema
+/**
+ * [create description]
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
 export function create(req, res) {
   return Team.create(req.body)
     .then(respondWithResult(res, 201))
@@ -130,12 +203,18 @@ export function create(req, res) {
 
 // Upserts the given Team in the DB at the specified ID
 export function upsert(req, res) {
-  if(req.body._id) {
+  if (req.body._id) {
     delete req.body._id;
   }
-  return Team.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+  return Team.findOneAndUpdate({
+    _id: req.params.id
+  }, req.body, {
+    upsert: true,
+    setDefaultsOnInsert: true,
+    runValidators: true
+  }).exec()
 
-    .then(respondWithResult(res))
+  .then(respondWithResult(res))
     .catch(handleError(res));
 }
 
@@ -160,28 +239,44 @@ export function destroy(req, res) {
 }
 
 
-// Create a new team
+/**
+ * Function to add a new team member
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ * @return {function}  promise
+ */
 export function addTeamMember(req, res) {
+  console.log("---inside add team function-----");
+  console.log(req.body.team);
   var userEmail = req.params.email;
   var teamName = String(req.body.team.teamName);
   var member = String(req.body.team.member);
-  //
-  return Team.findOne({'name':teamName}).exec()
+
+  return Team.findOne({'name':teamName})
+  .populate(channel)
+  .exec()
     .then(teamObj => {
       if(!teamObj) {
         return res.status(401).end();
       }
-
-      for(var i=0 ; i<teamObj.members.length ;i++){
-        console.log("checking "+teamObj.members[i]);
-          if(teamObj.members[i]=== member){
-            console.log("found it!! "+teamObj.members[i]);
-            return res.status(204).end();
-          }
+      console.log("--------members----"+member);
+      var find = teamObj.members.indexOf(member);
+      console.log("----find value----"+find);
+      console.log("----original object ----"+teamObj);
+      if(find!=-1){
+        return res.status(204).end();
       }
 
-
       teamObj.members.push(member);
+      console.log("--------teamobj----------"+teamObj);
+      console.log("=-------channelobj--------"+teamObj.channel.name);
+      // PostData for sending emails
+            var postData = {
+                email: member,
+                message: 'This email is to notify you that you are '+
+                 'a part of team " '+teamObj.name +' "',
+                password:''
+              };
 
       //registering a memeber with a team
       User.findOne({'email':member}).exec()
@@ -194,27 +289,37 @@ export function addTeamMember(req, res) {
             'password' : 'password',
             'provider' : 'local'
           });
+          postData.password = 'password';
+        }
+        else{
+          postData.password = 'your existing passoword credentials';
         }
 
         userObj.team.push(teamObj);
+        console.log("----user---"+userObj);
         userObj.save();
+        emailFunction(postData);
+
         //Add this user to the public channel of the teamObj
         var channelArr = teamObj.channel;
+        console.log("----array-------"+channelArr);
         var channelObj = null;
         for( var idx = 0; idx < channelArr.length; idx++ ) {
           var channelObj = channelArr[idx];
           if(channelObj.name === 'public'){
+            console.log("\n---------public channel----"+channelObj);
             // Just break out of the loop
             break;
           }
         }
-        // Out of the channel retrieved, add the person to the
-        // public channel
+        /**
+        *Out of the channel retrieved, add the person to the public channel
+        */
         Channel.findOne(channelObj).exec()
                .then( trueChannelObj => {
                  trueChannelObj.members.push(member);
-                 //Now save this public channel agains the user that has been
-                 // added
+
+            // Now save this public channel agains the user that has been added
                  userObj.channel.push(trueChannelObj);
                  trueChannelObj.save();
                  userObj.save();
@@ -222,11 +327,11 @@ export function addTeamMember(req, res) {
       });
 
       //saving memeber in a particular team
-
-        return teamObj.save()
-          .then(() => {
-            res.status(204).end();
-          });
+      teamObj.save()
+      .then(()=>{
+        res.sendStatus(200);
+      });
 
     });
+
 }

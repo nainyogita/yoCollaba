@@ -81,85 +81,84 @@ export function show(req, res) {
   .catch(handleError(res));
 }
 
-// Creates a new Channel in the DB
+/**
+ * Update the channel values
+ * @param  {Object} req The request object
+ * @param  {Object} res The response object
+ * @return {Function}     Promise function
+ */
+export function updateChannel(req, res) {
+  return Team.findOne({'name' : req.body.name}).populate('channel').exec()
+         .then((team) => {
+          //  Find the given channel first in the array
+          for( var idx = 0; idx < team.channel.length; idx++ ){
+            if(team.channel[idx].name === req.body.blob.name) {
+              // Save it in the channel document first
+              Channel.findOne({'name' : req.body.blob.name})
+                     .exec().then((channel) => {
+                       channel.name = req.body.blob.name;
+                       channel.info = req.body.blob.info;
+                       channel.members = req.body.blob.members;
+                       channel.save().then(function() {
+                         team.channel[idx] = channel;
+                         team.save();
+                       });
+                     })
+                     .catch(handleError(res));
+              break;
+            }
+          }
+        })
+        .catch(handleError(res));
+}
+
+/**
+ * Create a new channel in the team specified in the req body
+ * @param  {Object} req The request object
+ * @param  {Object} res The response object
+ * @return {Function}     Promise function
+ */
 export function create(req, res) {
-  return Team.findById(req.body.teamId).exec()
+  return Team.findById(req.body.teamId).populate('channel').exec()
   .then((team) => {
     if(!team) {
       return res.status(401).end();
     }
 
-    var members = req.body.JSON.members;
-
-    members.push(req.body.teamLeader);
-    req.body.JSON.members = members;
-
+    var members = req.body.JSON.members; // Get the members added in this channel
+    var theads = team.thead; // Get the team leaders of this team
+    // Add these team leads as channel members in newly created channel
+    for(var i=0; i<theads.length ; i++)
+      req.body.JSON.members.push(theads[i]);
+      // Save the newly created channel
     var channelObj = new Channel(req.body.JSON);
     team.channel.push(channelObj);
-    //save the channel
-
-    channelObj.save();
-
-
-
-    //save channel for the team
-
-    team.save();
-
-
-
-    //save channel for channel members
-    for(let i = 0; i < members.length; i++){
-
-      User.findOne({'email':members[i]}).exec()
-      .then(userObj =>{
-        if(!userObj) {
-          userObj = new User({
-            'email' : members[i],
-            'password' : 'password',
-            'provider' : 'local'
+    // Save the channel information
+    channelObj.save().then(function() {
+      // Save the team information
+      team.save().then(function() {
+        // Save channel against the users
+        var members = req.body.JSON.members;
+        for(let i = 0; i < members.length; i++){
+            User.findOne({'email':members[i]}).exec()
+            .then(userObj =>{
+              if(!userObj) {
+                userObj = new User({
+                  'email' : members[i],
+                  'password' : 'password',
+                  'provider' : 'local'
+                });
+              }
+              userObj.channel.push(channelObj);
+              userObj.save()
+              .catch(handleError(res));
           });
         }
-        userObj.channel.push(channelObj);
-        userObj.save();
-
-
-      })
-      .catch(handleError(res));
-
-    }
-
+      //
+    })
+    .catch(handleError(res));
   })
   .catch(handleError(res));
-}
-
-// Upserts the given Channel in the DB at the specified ID
-export function upsert(req, res) {
-  if(req.body._id) {
-    delete req.body._id;
-  }
-  return Channel.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
-
-  .then(respondWithResult(res))
-  .catch(handleError(res));
-}
-
-// Updates an existing Channel in the DB
-export function patch(req, res) {
-  if(req.body._id) {
-    delete req.body._id;
-  }
-  return Channel.findById(req.params.id).exec()
-  .then(handleEntityNotFound(res))
-  .then(patchUpdates(req.body))
-  .then(respondWithResult(res))
-  .catch(handleError(res));
-}
-
-// Deletes a Channel from the DB
-export function destroy(req, res) {
-  return Channel.findById(req.params.id).exec()
-  .then(handleEntityNotFound(res))
-  .then(removeEntity(res))
+  })
   .catch(handleError(res));
 }

@@ -8,7 +8,19 @@ var organizationCtrlStub = {
   create: 'organizationCtrl.create',
   upsert: 'organizationCtrl.upsert',
   patch: 'organizationCtrl.patch',
-  destroy: 'organizationCtrl.destroy'
+  destroy: 'organizationCtrl.destroy',
+  createTeam: 'organizationCtrl.createTeam',
+  deleteTeam: 'organizationCtrl.deleteTeam',
+  owner: 'organizationCtrl.owner'
+};
+
+var authServiceStub = {
+  isAuthenticated() {
+    return 'authService.isAuthenticated';
+  },
+  hasRole(role) {
+    return `authService.hasRole.${role}`;
+  }
 };
 
 var routerStub = {
@@ -17,6 +29,7 @@ var routerStub = {
   patch: sinon.spy(),
   post: sinon.spy(),
   delete: sinon.spy()
+
 };
 
 // require the index with our stubbed out modules
@@ -26,7 +39,8 @@ var organizationIndex = proxyquire('./index.js', {
       return routerStub;
     }
   },
-  './organization.controller': organizationCtrlStub
+  './organization.controller': organizationCtrlStub,
+  '../../auth/auth.service': authServiceStub
 });
 
 describe('Organization API Router:', function() {
@@ -37,7 +51,7 @@ describe('Organization API Router:', function() {
   describe('GET /api/organizations', function() {
     it('should route to organization.controller.index', function() {
       expect(routerStub.get
-        .withArgs('/', 'organizationCtrl.index')
+        .withArgs('/', 'authService.isAuthenticated', 'organizationCtrl.index')
         ).to.have.been.calledOnce;
     });
   });
@@ -45,7 +59,7 @@ describe('Organization API Router:', function() {
   describe('GET /api/organizations/:id', function() {
     it('should route to organization.controller.show', function() {
       expect(routerStub.get
-        .withArgs('/:id', 'organizationCtrl.show')
+        .withArgs('/:id', 'authService.isAuthenticated', 'organizationCtrl.show')
         ).to.have.been.calledOnce;
     });
   });
@@ -61,7 +75,7 @@ describe('Organization API Router:', function() {
   describe('PUT /api/organizations/:id', function() {
     it('should route to organization.controller.upsert', function() {
       expect(routerStub.put
-        .withArgs('/:id', 'organizationCtrl.upsert')
+        .withArgs('/:id', 'authService.isAuthenticated', 'organizationCtrl.upsert')
         ).to.have.been.calledOnce;
     });
   });
@@ -69,7 +83,7 @@ describe('Organization API Router:', function() {
   describe('PATCH /api/organizations/:id', function() {
     it('should route to organization.controller.patch', function() {
       expect(routerStub.patch
-        .withArgs('/:id', 'organizationCtrl.patch')
+        .withArgs('/:id', 'authService.isAuthenticated', 'organizationCtrl.patch')
         ).to.have.been.calledOnce;
     });
   });
@@ -77,8 +91,33 @@ describe('Organization API Router:', function() {
   describe('DELETE /api/organizations/:id', function() {
     it('should route to organization.controller.destroy', function() {
       expect(routerStub.delete
-        .withArgs('/:id', 'organizationCtrl.destroy')
+        .withArgs('/:id', 'authService.isAuthenticated', 'organizationCtrl.destroy')
         ).to.have.been.calledOnce;
     });
   });
+
+  describe('PUT /api/organizations/:email/createTeam', function() {
+    it('should route to organization.controller.createTeam', function() {
+      expect(routerStub.put
+        .withArgs('/:email/createTeam', 'authService.hasRole.owner', 'organizationCtrl.createTeam')
+        ).to.have.been.calledOnce;
+    });
+  });
+
+  describe('PUT /api/organizations/:email/deleteTeam', function() {
+    it('should route to organization.controller.deleteTeam', function() {
+      expect(routerStub.put
+        .withArgs('/:email/deleteTeam','authService.hasRole.owner', 'organizationCtrl.deleteTeam')
+        ).to.have.been.calledOnce;
+    });
+  });
+
+  describe('GET /api/organizations/:email/getTeam', function() {
+    it('should route to organization.controller.owner', function() {
+      expect(routerStub.get
+        .withArgs('/:email/getTeam', 'authService.isAuthenticated', 'organizationCtrl.owner')
+        ).to.have.been.calledOnce;
+    });
+  });
+
 });

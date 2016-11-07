@@ -7,7 +7,7 @@ module.exports = {
 
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/yocollaba-dev'
+    uri: 'mongodb://localhost/gabfest-dev'
   },
 
   // Seed database on startup

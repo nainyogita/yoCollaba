@@ -39,14 +39,12 @@ export default class LoginController {
         })
           .then((res) => {
 
-            
             // Logged in, redirect to home
             if(res.role == 'admin')
               this.$state.go('admin');
 
             else if(res.role == 'user')
-
-            this.$state.go('home');
+              this.$state.go('home');
 
            else this.$state.go('main');
           })

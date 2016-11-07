@@ -1,17 +1,87 @@
 'use strict';
 
 var app = require('../..');
+import User from '../user/user.model';
+import Team from '../team/team.model';
+import Channel from '../channel/channel.model';
 import request from 'supertest';
 
 var newTeam;
+var teamleader;
+var tokenTeamleader;
+var team;
+var idTeam;
+var teams;
+var json;
+var channel;
+var chooseTeam , chooseChannel;
 
 describe('Team API:', function() {
-  describe('GET /api/teams', function() {
+
+  beforeEach(function(done) {
+    return User.remove().then(function() {
+        team = new Team({
+          name: 'Modi Mills',
+          thead: ['thead@example.com'], //Multiple heads of team
+          members: ['priyanka@example.com','thead@example.com'],
+          info: 'Modi Mills, Okhla',
+        });
+
+        teamleader = new User({
+          provider: 'local',
+          name: 'Fake TL',
+          email: 'thead@example.com',
+          password: 'thead',
+          role: 'thead',
+          status: true
+        });
+
+        channel = new Channel({
+          name: 'public',
+          info : 'A public channel',
+          members : [ 'priyanka@example.com','thead@example.com'],
+          type : 'public'
+        });
+
+        teamleader.team.push(team);
+        teamleader.channel.push(channel);
+
+
+        return teamleader.save().then(function() {
+          return channel.save().then(function(){
+              team.channel.push(channel);
+              return team.save(function(err,data){
+                idTeam = data._id;
+              }).then(function() {
+                chooseTeam = team;
+                chooseChannel = channel;
+                //
+                request(app)
+                  .post('/auth/local')
+                  .send({
+                    email : 'thead@example.com',
+                    password : 'thead'
+                  })
+                  .expect(200)
+                  .expect('Content-Type', /json/)
+                  .end((err, res) => {
+                    tokenTeamleader = res.body.token;
+                    done();
+                  }); //.end()
+                //
+              }); // team.save.then()
+            });// channel.save.then()
+        }); // teamleader.save()
+    });
+  });
+
+  describe('GET /api/teams/:email/getTeams', function() {
     var teams;
 
     beforeEach(function(done) {
       request(app)
-        .get('/api/teams')
+        .get('/api/teams/teamleader@example.com/getTeams')
+        .set('authorization', `Bearer ${tokenTeamleader}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -28,161 +98,85 @@ describe('Team API:', function() {
     });
   });
 
-  describe('POST /api/teams', function() {
-    beforeEach(function(done) {
-      request(app)
-        .post('/api/teams')
-        .send({
-          name: 'New Team',
-          info: 'This is the brand new team!!!'
-        })
-        .expect(201)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            return done(err);
+
+  describe('POST /api/teams/teamEdit', function() {
+
+      it('should respond with redirect on post', function(done) {
+
+        json = {
+          "JSON" : {
+                    'id':idTeam,
+                    'name':'New Modi Mills',
+                    'info':'new info'
+                  }
           }
-          newTeam = res.body;
+
+        request(app)
+          .post('/api/teams/teamEdit')
+          .send(json)
+          .set('authorization', `Bearer ${tokenTeamleader}`)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end((err, res) => {
+            if(err) {
+              return done(err);
+            }
+
+          });
           done();
-        });
+      });
+
     });
 
-    it('should respond with the newly created team', function() {
-      expect(newTeam.name).to.equal('New Team');
-      expect(newTeam.info).to.equal('This is the brand new team!!!');
+    ////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////// Internal server error 500. ////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+  describe('PUT /api/teams/:email/addTeamMember', function() {
+    it('should respond with status 200 when adding a member', function(done) {
+      var teamJson ={'team': {
+        member: 'papa@gmail.com',
+        teamName: 'Modi Mills'
+      }};
+
+      request(app)
+        .put('/api/teams/thead@example.com/addTeamMember')
+        .set('authorization', `Bearer ${tokenTeamleader}`)
+        .send(teamJson)
+        .expect(200)
+        .end((err, res) => {
+          if(err) {
+            console.log(err);
+            return done(err);
+          }
+        });
+          done();
     });
   });
 
-  describe('GET /api/teams/:id', function() {
-    var team;
 
-    beforeEach(function(done) {
+  describe('PUT /api/teams/:email/leaveGroup', function() {
+    it('should respond with status 200 when leaving a group', function(done) {
+
+      var leaveJson ={'leave' : {
+        'team' :chooseTeam,
+        'channel':chooseChannel
+      }};
+
       request(app)
-        .get(`/api/teams/${newTeam._id}`)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if(err) {
-            return done(err);
-          }
-          team = res.body;
-          done();
-        });
-    });
-
-    afterEach(function() {
-      team = {};
-    });
-
-    it('should respond with the requested team', function() {
-      expect(team.name).to.equal('New Team');
-      expect(team.info).to.equal('This is the brand new team!!!');
-    });
-  });
-
-  describe('PUT /api/teams/:id', function() {
-    var updatedTeam;
-
-    beforeEach(function(done) {
-      request(app)
-        .put(`/api/teams/${newTeam._id}`)
-        .send({
-          name: 'Updated Team',
-          info: 'This is the updated team!!!'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if(err) {
-            return done(err);
-          }
-          updatedTeam = res.body;
-          done();
-        });
-    });
-
-    afterEach(function() {
-      updatedTeam = {};
-    });
-
-    it('should respond with the original team', function() {
-      expect(updatedTeam.name).to.equal('New Team');
-      expect(updatedTeam.info).to.equal('This is the brand new team!!!');
-    });
-
-    it('should respond with the updated team on a subsequent GET', function(done) {
-      request(app)
-        .get(`/api/teams/${newTeam._id}`)
+        .put('/api/teams/thead@example.com/leaveGroup')
+        .set('authorization', `Bearer ${tokenTeamleader}`)
+        .send(leaveJson)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if(err) {
+            console.log(err);
             return done(err);
           }
-          let team = res.body;
-
-          expect(team.name).to.equal('Updated Team');
-          expect(team.info).to.equal('This is the updated team!!!');
-
-          done();
         });
+        done();
     });
   });
 
-  describe('PATCH /api/teams/:id', function() {
-    var patchedTeam;
 
-    beforeEach(function(done) {
-      request(app)
-        .patch(`/api/teams/${newTeam._id}`)
-        .send([
-          { op: 'replace', path: '/name', value: 'Patched Team' },
-          { op: 'replace', path: '/info', value: 'This is the patched team!!!' }
-        ])
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          if(err) {
-            return done(err);
-          }
-          patchedTeam = res.body;
-          done();
-        });
-    });
-
-    afterEach(function() {
-      patchedTeam = {};
-    });
-
-    it('should respond with the patched team', function() {
-      expect(patchedTeam.name).to.equal('Patched Team');
-      expect(patchedTeam.info).to.equal('This is the patched team!!!');
-    });
-  });
-
-  describe('DELETE /api/teams/:id', function() {
-    it('should respond with 204 on successful removal', function(done) {
-      request(app)
-        .delete(`/api/teams/${newTeam._id}`)
-        .expect(204)
-        .end(err => {
-          if(err) {
-            return done(err);
-          }
-          done();
-        });
-    });
-
-    it('should respond with 404 when team does not exist', function(done) {
-      request(app)
-        .delete(`/api/teams/${newTeam._id}`)
-        .expect(404)
-        .end(err => {
-          if(err) {
-            return done(err);
-          }
-          done();
-        });
-    });
-  });
-});
+}); // describe ends here

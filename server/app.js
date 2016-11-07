@@ -77,7 +77,7 @@ app.post('/email',function(req,res){
      var mailFrom = 'yogita.uc@gmail.com'
      var mailOptions = {
        to: owner.email,                  // your email here
-       subject: 'Registeration with yoCollaba',
+       subject: 'Registeration with gabfest',
        from: mailFrom,
        sender: mailFrom,
        html: data

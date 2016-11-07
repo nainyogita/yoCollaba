@@ -51,6 +51,14 @@ function onConnect(socket, socketio) {
     socket.log(JSON.stringify(data, null, 2));
   });
 
+  /**
+    * Show that user is typing in room
+    */
+    socket.on('room:checkTyping',data =>{
+      socketio.to(data.room)
+        .emit('room:checkTyping',data);
+      socket.log(JSON.stringify(data,null,2));
+    });
 
   // Insert sockets below
   require('../api/emojis/emojis.socket').register(socket);

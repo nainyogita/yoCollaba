@@ -29,9 +29,14 @@ export class OrganizationComponent {
     this.$http = $http;
   }
 
-  //save the organisation in db with approvalStatus=false on request for
-  //'register organisation'
+  /**
+  *   save the organization in db with approvalStatus=false on request for
+  *   'register organization'
+  *   @param {JSON} org - The organization to be registered
+  *   @extends register(form) function
+  */
   registerOrg(org) {
+    
     return this.$http.post('/api/organizations', org)
     .success((response) => {
       if(response === "EXISTS"){
@@ -47,8 +52,11 @@ export class OrganizationComponent {
     });
   }
 
-  //this method is called when user submits the 'register organization' form
-  register(form) {
+  /**
+  *   save the organization in db with approvalStatus=false on request for
+  *   'register organization'
+  *   @param {JSON} form - The form data organization to be registered
+  */  register(form) {
 
     //Get domain of organization from email of owner
     var domain = (this.org.owner.email).split('@');
@@ -59,8 +67,7 @@ export class OrganizationComponent {
     //checks validity of form
     if(form.$valid) {
 
-      //call registerOrg function defined above, which hits the server API to
-      //store the organization data
+      //call registerOrg function defined above
       return this.registerOrg(this.org)
       .then(() => {
         //  organization data succeddfully stored in db
@@ -71,12 +78,13 @@ export class OrganizationComponent {
   }
 }
 
-/**defines the component, the template for <organization></organization>
+/**
+*defines the component, the template for <organization></organization>
 *used in organization.routes.js is specified here
 *controller as vm specifies how the scope of controller will be accessed,
 i.e, this = vm inside the scope of controller.
 */
-export default angular.module('yoCollabaApp.organization', [uiRouter])
+export default angular.module('gabfestApp.organization', [uiRouter])
 .config(routes)
 .component('organization', {
   template: require('./organization.html'),

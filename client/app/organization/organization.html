@@ -1,20 +1,20 @@
 <!-- This template is inserted in index.html in the ui-view directive -->
+<link rel="stylesheet" href="organization.css">
 
-
-<div class="container">
-  <div class="row">
+<div class="container hero-login">
+  <div class="row abc transparent-org">
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-      <h3>Register your Organization here!</h3>
+      <h3><center>Register your Organization here!</center></h3>
       <form class="form" name="form" ng-submit="vm.register(form)" novalidate ng-hide="vm.submitted">
 
         <!-- Get organization Name -->
         <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
         'has-error': form.name.$invalid && vm.submitted }">
-        <label>Name of Your Organization</label>
+        <!-- <label>Name of Your Organization</label> -->
 
         <input type="text" name="name" class="form-control" ng-model="vm.org.name"
-        required/>
+        required placeholder="Name of organization"/>
         <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
           A name is required
         </p>
@@ -23,11 +23,11 @@
       <!-- Get owner Name -->
       <div class="form-group" ng-class="{ 'has-success': form.owner.name.$valid && vm.submitted,
       'has-error': form.owner.name.$invalid && vm.submitted }">
-      <label>Your Name</label>
+      <!-- <label>Your Name</label> -->
 
       <input type="owner.name" name="owner.name" class="form-control" ng-model="vm.org.owner.name"
       required
-      mongoose-error/>
+      mongoose-error placeholder="Owner Name"/>
       <p class="help-block" ng-show="form.owner.name.$error.owner.name && vm.submitted">
         Doesn't look like a valid name.
       </p>
@@ -42,11 +42,11 @@
     <!-- Get owner email -->
     <div class="form-group" ng-class="{ 'has-success': form.owner.email.$valid && vm.submitted,
     'has-error': form.owner.email.$invalid && vm.submitted }">
-    <label>Your Email Address</label>
+    <!-- <label>Your Email Address</label> -->
 
     <input type="owner.email" name="owner.email" class="form-control" ng-model="vm.org.owner.email"
     required
-    mongoose-error/>
+    mongoose-error placeholder="Email Address"/>
     <p class="help-block" ng-show="form.owner.email.$error.owner.email && vm.submitted">
       Doesn't look like a valid email.
     </p>
@@ -59,13 +59,11 @@
   </div>
 
 
-  <div>
-    <button class="btn btn-inverse btn-primary btn-register" type="submit">
-      Register
-    </button>
-  </div>
+  <button class="btn btn-inverse btn-primary btn-register col-lg-12 col-md-12 col-sm-12 col-xs-12" type="submit">
+  Register
+  </button>
 
-  <hr/>
+
 
 </form>
 </div>

@@ -4,26 +4,27 @@ import app from '../..';
 import User from './user.model';
 import request from 'supertest';
 
-describe('User API:', function() {
+describe('User API Integration', function() {
   var user;
 
   // Clear users before testing
   before(function() {
     return User.remove().then(function() {
       user = new User({
+        provider: 'local',
         name: 'Fake User',
         email: 'test@example.com',
-        password: 'password'
+        password: 'password',
+        status: true
       });
-
       return user.save();
     });
   });
 
   // Clear users after testing
-  after(function() {
-    return User.remove();
-  });
+  // after(function() {
+  //   return User.remove();
+  // });
 
   describe('GET /api/users/me', function() {
     var token;
@@ -59,7 +60,9 @@ describe('User API:', function() {
       request(app)
         .get('/api/users/me')
         .expect(401)
-        .end(done);
+        .end((err, res) => {
+          done();
+        });
     });
   });
 });

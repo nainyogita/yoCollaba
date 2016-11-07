@@ -2,7 +2,7 @@
 
 describe('Controller: WallCtrl', function() {
   // load the controller's module
-  beforeEach(module('yoCollabaApp.wall'));
+  beforeEach(module('gabfestApp.wall'));
 
   var WallCtrl;
 

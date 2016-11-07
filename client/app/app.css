@@ -1,6 +1,8 @@
 @import '~bootstrap/dist/css/bootstrap.css';
 @import '~bootstrap-social/bootstrap-social.css';
 @import '~angular-ui-notification/dist/angular-ui-notification.css';
+@import url('https://fonts.googleapis.com/css?family=Pacifico|Kreon|Roboto');
+
 /**
  * Bootstrap Fonts
  */
@@ -42,9 +44,15 @@
   padding: 0.2em 0;
 }
 
+html, body, .ng-scope {
+  height : 100%;
+}
+
 
 /* Component styles are injected through gulp */
 /* inject:css */
+@import 'account/login/login.css';
+@import 'account/signup/signup.css';
 @import 'admin/admin.css';
 @import 'main/main.css';
 @import 'organization/organization.css';

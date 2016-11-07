@@ -6,9 +6,6 @@ var channelCtrlStub = {
   index: 'channelCtrl.index',
   show: 'channelCtrl.show',
   create: 'channelCtrl.create',
-  upsert: 'channelCtrl.upsert',
-  patch: 'channelCtrl.patch',
-  destroy: 'channelCtrl.destroy'
 };
 
 var routerStub = {
@@ -54,30 +51,6 @@ describe('Channel API Router:', function() {
     it('should route to channel.controller.create', function() {
       expect(routerStub.post
         .withArgs('/', 'channelCtrl.create')
-        ).to.have.been.calledOnce;
-    });
-  });
-
-  describe('PUT /api/channels/:id', function() {
-    it('should route to channel.controller.upsert', function() {
-      expect(routerStub.put
-        .withArgs('/:id', 'channelCtrl.upsert')
-        ).to.have.been.calledOnce;
-    });
-  });
-
-  describe('PATCH /api/channels/:id', function() {
-    it('should route to channel.controller.patch', function() {
-      expect(routerStub.patch
-        .withArgs('/:id', 'channelCtrl.patch')
-        ).to.have.been.calledOnce;
-    });
-  });
-
-  describe('DELETE /api/channels/:id', function() {
-    it('should route to channel.controller.destroy', function() {
-      expect(routerStub.delete
-        .withArgs('/:id', 'channelCtrl.destroy')
         ).to.have.been.calledOnce;
     });
   });

@@ -38,6 +38,12 @@ export function TeamleaderResource($resource) {
         controller:'teamEdit'
       }
     },
+    leaveGroup: {
+      method : 'PUT',
+      params: {
+        controller:'leaveGroup'
+      }
+    },
     get: {
       method: 'GET',
       params: {

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="chat.css">
 <!-- Display chat page -->
 <div ng-show="vmHome.team">
   <div class="btn btn-default" ng-click="vm.showChannels(vmHome.selectedTeamInfo)" >
@@ -28,10 +29,11 @@
           <li>
             PrivateChannels
           </li>
-          <li ng-repeat="channel in vm.privateChannels" ng-click="vm.groupChat(channel)">
-            <div class="btn btn-default" >
+          <li ng-repeat="channel in vm.privateChannels" >
+            <a ng-click="vm.groupChat(channel)" class="link">
               {{channel.name}}
-            </div>
+            </a>
+            <span class="btn btn-default" ng-click="vm.leaveGroup(channel)" ng-if="vm.allowLeaving">x</span>
           </li>
         </ul>
 
@@ -69,7 +71,11 @@
 
       <div class="row chatinput">
 
-        <input type="text" placeholder="Enter your Message" ng-model="vm.message" />
+        <div ng-model = "vm.typing">
+          {{ vm.typing }}
+        </div>
+        <!-- <div class="col-md-7"> -->
+        <input type="text" placeholder="Enter your Message" ng-model="vm.message" ng-keyup="vm.isTyping()"/>
         <!-- Upload on file select -->
         <button type="button" class="btn btn-sm btn-primary" ngf-select="vm.upload($file)">+</button>
         <br><br>
@@ -81,7 +87,7 @@
 
       </div>
 
-      <div class="col-md-12">
+      <div class="col-md-12" class = "emoji-box">
         <button type="button" class="btn btn-default" ng-repeat = "(key, value) in vm.emojiList" ng-click="vm.addThisEmoji(key, value)">
           {{value}}
         </button>
@@ -102,7 +108,7 @@
 
     </div>
 
-<!-- Display team members and online users -->
+    <!-- Display team members and online users -->
     <div class="col-md-3 odiv">
       <h4>
         Online Users

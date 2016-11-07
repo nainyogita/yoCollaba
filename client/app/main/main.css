@@ -2,15 +2,20 @@
   margin: 20px 0;
 }
 
+.navbar{
+  margin-bottom:0;
+}
 #banner {
   border-bottom: none;
   margin-top: -20px;
 }
 
 #banner h1 {
-  font-size: 60px;
+  font-size: 90px;
   line-height: 1;
   letter-spacing: -1px;
+  font-family: 'Pacifico';
+  text-transform: capitalize;
 }
 
 .hero-unit {
@@ -18,8 +23,10 @@
   padding: 30px 15px;
   color: #F5F5F5;
   text-align: center;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  background: #4393B9;
+  text-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
+  background-image: url('https://il5.picdn.net/shutterstock/videos/12178598/thumb/10.jpg');
+  background-size: contain;
+  min-height : 100%;
 }
 
 .navbar-text {

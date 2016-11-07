@@ -2,7 +2,7 @@
 
 describe('Controller: HomeCtrl', function() {
   // load the controller's module
-  beforeEach(module('yoCollabaApp.home'));
+  beforeEach(module('gabfestApp.home'));
 
   var HomeCtrl;
 

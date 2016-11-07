@@ -2,7 +2,7 @@
 
 describe('Controller: ChatCtrl', function() {
   // load the controller's module
-  beforeEach(module('yoCollabaApp.chat'));
+  beforeEach(module('gabfestApp.chat'));
 
   var ChatCtrl;
 

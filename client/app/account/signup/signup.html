@@ -1,17 +1,16 @@
-<div class="container">
-  <div class="row">
+<link rel="stylesheet" href="signup.css">
+<div class="container hero-login">
+  <div class="row abc">
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-      <h1>Login</h1>
-      <br><br>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 transparent_signup">
       <form class="form" name="form" ng-submit="vm.register(form)" novalidate>
 
         <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
                                             'has-error': form.name.$invalid && vm.submitted }">
-          <label>Name</label>
+          <!-- <label>Name</label> -->
 
           <input type="text" name="name" class="form-control" ng-model="vm.user.name"
-                 required/>
+                 required placeholder="Name"/>
           <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
             A name is required
           </p>
@@ -19,11 +18,11 @@
 
         <div class="form-group" ng-class="{ 'has-success': form.email.$valid && vm.submitted,
                                             'has-error': form.email.$invalid && vm.submitted }">
-          <label>Email</label>
+          <!-- <label>Email</label> -->
 
           <input type="email" name="email" class="form-control" ng-model="vm.user.email"
                  required
-                 mongoose-error/>
+                 mongoose-error placeholder="Email"/>
           <p class="help-block" ng-show="form.email.$error.email && vm.submitted">
             Doesn't look like a valid email.
           </p>
@@ -37,12 +36,12 @@
 
         <div class="form-group" ng-class="{ 'has-success': form.password.$valid && vm.submitted,
                                             'has-error': form.password.$invalid && vm.submitted }">
-          <label>Password</label>
+          <!-- <label>Password</label> -->
 
           <input type="password" name="password" class="form-control" ng-model="vm.user.password"
                  ng-minlength="3"
                  required
-                 mongoose-error/>
+                 mongoose-error placeholder="Password"/>
           <p class="help-block"
              ng-show="(form.password.$error.minlength || form.password.$error.required) && vm.submitted">
             Password must be at least 3 characters.
@@ -54,28 +53,30 @@
 
         <div class="form-group" ng-class="{ 'has-success': form.confirmPassword.$valid && vm.submitted,
                                             'has-error': form.confirmPassword.$invalid && vm.submitted }">
-          <label>Confirm Password</label>
+          <!-- <label>Confirm Password</label> -->
           <input type="password" name="confirmPassword" class="form-control" ng-model="vm.user.confirmPassword"
                  match="vm.user.password"
-                 ng-minlength="3" required/>
+                 ng-minlength="3" required placeholder="Confirm Password"/>
           <p class="help-block"
              ng-show="form.confirmPassword.$error.match && vm.submitted">
             Passwords must match.
           </p>
         </div>
 
-        <div class="row">
-          <div class="col-lg-12 col-md-2 col-sm-2 col-xs-12"></div>
-          <button class="btn btn-inverse btn-primary btn-register col-lg-4 col-md-4 col-sm-4 col-xs-12" type="submit">
-            Sign up
-          </button>
-          <a class="btn btn-default btn-danger btn-login col-lg-4 col-md-4 col-sm-4 col-xs-12" ui-sref="login">
-            Login
-          </a>
-          <div class="col-lg-12 col-md-2 col-sm-2 col-xs-12"></div>
-        </div>
+        <!-- <div class="row">
+          <div class="col-lg-12 col-md-2 col-sm-2 col-xs-12"></div> -->
 
-        <hr/>
+          <button class="btn btn-inverse btn-primary btn-register col-lg-12 col-md-12 col-sm-12 col-xs-12" type="submit">
+            Sign Up
+          </button>
+
+          <!-- <a class="btn btn-default btn-danger btn-login col-lg-4 col-md-4 col-sm-4 col-xs-12" ui-sref="login">
+            Login
+          </a> -->
+          <!-- <div class="col-lg-12 col-md-2 col-sm-2 col-xs-12"></div>
+        </div> -->
+
+
           <!-- TODO: To implement signup through social media -->
         <!-- <div class="row">
           <div class="col-sm-4 col-md-3">
@@ -86,5 +87,5 @@
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
   </div>
-  <hr>
+
 </div>

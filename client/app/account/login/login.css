@@ -1,4 +1,4 @@
-.hero-login{
+/*.hero-login{
   background-image: url('https://il5.picdn.net/shutterstock/videos/12178598/thumb/10.jpg');
   background-size: cover;
 }
@@ -17,7 +17,7 @@
   padding:2%;
 }
 
-/*.btn{
+.btn{
   border-color: blue;
   border-width: 10px;
   background: rgba(255,255,255, 0.5);

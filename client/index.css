@@ -1,3 +1,23 @@
+.btn-login {
+  background: #455A64;
+}
+
+.login{
+  padding-top: 10px;
+  padding-bottom: 5px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.login .btn {
+  text-transform: capitalize;
+}
+
+.help-block {
+  font-size : 9px !important;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: capitalize;
+  color : #ffcdd2;
+}
 
 .bar{
   background-color: #263238;
@@ -11,21 +31,6 @@
   color: white !important;
   font-size : 14px;
   letter-spacing: 1px;
-}
-
-.login {
-  color: grey !important;
-  font-size : 14px;
-  letter-spacing: 1px;
-  margin-top:1%;
-  margin-bottom:1%;
-}
-
-.btn-login{
-    background-color: #5a5a5a;
-    padding:1%;
-    color: white !important;
-    border-radius: 2px;
 }
 
 .bar a.navbar-brand {
@@ -44,13 +49,8 @@
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   background-color : #455A64;
-  border-left:5px solid #455A64;
+  /*border-left:5px solid #455A64;
   border-right:5px solid #455A64;
   border-bottom : 2px solid white;
-  border-top : 2px solid white;
-}
-
-.email{
-    border-radius: 2px;
-    padding: : 5px 1px 1px;
+  border-top : 2px solid white;*/
 }

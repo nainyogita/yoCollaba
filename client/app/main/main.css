@@ -21,9 +21,6 @@
 .hero-unit {
   position: relative;
   padding: 30px 15px;
-  /*color: #F5F5F5;*/
-  /*text-align: center;
-  text-shadow: 5px 5px 0px rgba(0, 0, 0, 1);*/
   background-image: url('https://il5.picdn.net/shutterstock/videos/12178598/thumb/10.jpg');
   background-size: cover;
   min-height : 100%;

@@ -48,7 +48,8 @@ org : Org = {
 
   // To add members while creating channel
   addThead(){
-    this.org.teams.thead.push(this.head);
+    if(this.head != "" && (typeof this.head!='undefined'))
+      this.org.teams.thead.push(this.head);
     this.head ="";
   }
 
@@ -64,7 +65,7 @@ org : Org = {
   */
   addTeam(form) {
     this.submitted = true;
-  
+
     if(form.$valid) {
       return this.Auth.createTeam({
         teams: this.org.teams

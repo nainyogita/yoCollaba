@@ -82,8 +82,6 @@ export default class TeamleaderController {
          * This is to set the options of the dropdown initially
          */
         this.getTeamMembers();
-        console.log(this.membersList);
-        console.log(this.membersListSelected);
       });
       this.Channel = Channel;
       this.TeamLeader = TeamLeader;
@@ -120,7 +118,7 @@ export default class TeamleaderController {
      var team = this.selectedOptionToShow;
      var channels = team.channel;
      for( var idx = 0; idx < channels.length; idx++ ) {
-       console.log(channels[idx]);
+       
        if( channels[idx]['name'] === 'public' && channels[idx]['type'] === 'public') {
          this.membersList = channels[idx]['members'];
          this.membersList = this.membersList.map(function(member){
@@ -242,7 +240,8 @@ export default class TeamleaderController {
 
   /* assign name of team in which member will be added */
   add(name){
-    this.nameSelected = name;
+    if(name != "" && (typeof name!='undefined'))
+      this.nameSelected = name;
   }
 
   /* Form to edit the credentials of the team */
@@ -258,7 +257,8 @@ export default class TeamleaderController {
 
   // To add members while creating channel
   addChannelMember(){
-    this.channelJSON.members.push(this.member);
+    if(this.member != "" && (typeof this.member!='undefined'))
+      this.channelJSON.members.push(this.member);
     this.member ="";
   }
 

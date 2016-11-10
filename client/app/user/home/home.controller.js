@@ -51,12 +51,12 @@ export default class HomeController {
   }
 
   getTeamMembers() {
-    console.log(this.selectedTeamInfo.members);
+    
     this.teamMembers = [];
     angular.forEach(this.selectedTeamInfo.members, (email) => {
 
       this.$http.get('/api/users/getByEmail/' + email).then((response) => {
-        console.log(response);
+
         this.teamMembers.push(response.data);
       });
 

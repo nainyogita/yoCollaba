@@ -1,3 +1,40 @@
+.well{
+  /*background-color: #CFA065;*/
+  background-color: #F2DBBF;
+  /*color:#1F4151;*/
+  color: black;
+}
+
+.well table{
+  border:none;
+  outline:none;
+}
+
+.edit-icon, .edit-icon:hover{
+  text-decoration: none;
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  font-size:20px;
+  color: black;
+}
+
+.team_heading{
+  font-family: Petrona;
+  font-size:16px;
+  text-transform: capitalize;
+}
+
+.team_info_heading{
+  font-family: Petrona;
+  font-size:13px;
+  text-transform: capitalize;
+}
+
+.team_info{
+  font-size:12px;
+}
+
 .btn-circle {
   width: 30px;
   height: 30px;

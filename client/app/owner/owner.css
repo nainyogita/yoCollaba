@@ -2,3 +2,21 @@
   background-color: navy;
   color:white;
 }
+
+.btn-delete{
+  font-size:20px;
+  background-color: #ef5350;
+  border-radius: 0px;
+  font-weight: bold;
+}
+
+.team-table{
+  border: 2px solid #337ab7;
+  border-radius: 15px;
+}
+
+.fix-top-right {
+  position: absolute;
+  top: 0;
+  right : 0;
+}

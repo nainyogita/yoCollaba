@@ -1,3 +1,4 @@
+<br><br>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-6">
@@ -69,19 +70,22 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="panel-footer"><br></div>
 			</div>
 		</div>
+
 		<!--  display team information  -->
 		<div class="col-md-6">
 			<div class="list-group">
 				<a href="#" class="list-group-item active">Teams Created</a>
 				<div class="list-group-item" ng-repeat = "team in owner.organization.team">
-					<table class="table table-condensed table-striped">
+					<table class="table team-table">
 						<thead>
 							<tr>
 								<td colspan = "3">
 									{{ team.name }}
+									<button type="button" class="btn btn-danger btn-circle
+									pull-right btn-delete fix-top-right" title="delete this team"
+									ng-click = "owner.delete(team.name)">&#10006;</button>
 								</td>
 							</tr>
 						</thead>
@@ -123,13 +127,12 @@
 									{{ team.members.length }}
 								</td>
 							</tr>
-							<tr>
+							<!-- <tr>
 								<td colspan = "3" class = "text-right">
-									<button type="button" class="btn btn-danger" ng-click = "owner.delete(team.name)">
-										Delete this team
-									</button>
+									<button type="button" class="btn btn-danger btn-circle btn-delete"
+									ng-click = "owner.delete(team.name)">&#215;</button>
 								</td>
-							</tr>
+							</tr> -->
 						</tbody>
 					</table>
 				</div>

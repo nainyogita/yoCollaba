@@ -148,14 +148,14 @@ export function destroy(req, res) {
      }
    });
  }
- 
+
 /**
  * Get user details from user email
  */
 export function getByEmail(req, res, next) {
   var userEmail = req.params.email;
-  console.log("--------Inside get By Email--------");
-  console.log(userEmail);
+  
+
   return User.findOne({
       'email': userEmail
     }, '-salt -password').exec()

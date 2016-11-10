@@ -301,36 +301,35 @@ export function deleteTeam(req, res) {
     Organization.findOne({'owner.email':userEmail})
     .exec()
       .then(org => {
-        //list of all the channels that were part of the deleted team
+        // List of all the channels that were part of the deleted team
         var teamChannels = teamObj.channel;
-        //delete the channels of the deleted team
+        // Delete the channels of the deleted team
         for(var i=0 ; i<teamChannels.length ; i++){
           Channel.findOne(teamChannels[i]).exec()
-          .then(handleEntityNotFound(res))
-          .then(removeEntity(res))
+          .then(() => {
+            //delete team from team schema
+            Team.findOne(teamObj).exec().then(() => {
+              for(var i=0  ; i<teamObj.thead.length ; i++){
+              //delete team from user table
+                User.findOne({'email':teamObj.thead[i]}).exec()
+                  .then(user => {
+                    if(user){
+                      user.team.splice(user.team.indexOf(teamObj._id),1);
+                      //delete team from organization schema
+                      org.team.splice(org.team.indexOf(teamObj._id), 1);
+                      user.save().then(function(){
+                        org.save()
+                        .then(()=>{
+                          res.sendStatus(200);
+                        });
+                      });
+                    }
+                  });
+                }
+            });
+          })
           .catch(handleError(res));
         }
-        //delete team from team schema
-        Team.findOne(teamObj).exec()
-          .then(handleEntityNotFound(res))
-          .then(removeEntity(res))
-          .catch(handleError(res));
-
-          for(var i=0  ; i<teamObj.thead.length ; i++){
-          //delete team from user table
-            User.findOne({'email':teamObj.thead[i]}).exec()
-              .then(user => {
-                user.team.splice(user.team.indexOf(teamObj._id),1);
-                user.save();
-              }).catch(handleError(res));
-          }
-        //delete team from organization schema
-        org.team.splice(org.team.indexOf(teamObj._id), 1);
-        //save updated organization schema
-        org.save()
-        .then(()=>{
-          res.sendStatus(200);
-        });
       });
   });
 
@@ -340,14 +339,24 @@ export function deleteTeam(req, res) {
 
 // Creates a new Organization in the DB
 export function create(req, res) {
+  let id = null;
  Organization.findOne({owner : req.body.owner}).exec()
    .then((data) => {
      if(data != null){
-      res.send("EXISTS");
+      res.json({
+        status : "EXISTS",
+        id : data._id
+      });
      }
      else{
-       return Organization.create(req.body).then(() => {
-         res.send("NO");
+       var orgReq = new Organization(req.body);
+       return orgReq.save((err, data) => {
+         id = data;
+       }).then(() => {
+         res.json({
+           status : "NO",
+           id : id
+         });
        });
      }
    })

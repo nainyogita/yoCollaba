@@ -246,8 +246,7 @@ export function destroy(req, res) {
  * @return {function}  promise
  */
 export function addTeamMember(req, res) {
-  console.log("---inside add team function-----");
-  console.log(req.body.team);
+
   var userEmail = req.params.email;
   var teamName = String(req.body.team.teamName);
   var member = String(req.body.team.member);
@@ -259,17 +258,15 @@ export function addTeamMember(req, res) {
       if(!teamObj) {
         return res.status(401).end();
       }
-      console.log("--------members----"+member);
+
       var find = teamObj.members.indexOf(member);
-      console.log("----find value----"+find);
-      console.log("----original object ----"+teamObj);
+
       if(find!=-1){
         return res.status(204).end();
       }
 
       teamObj.members.push(member);
-      console.log("--------teamobj----------"+teamObj);
-      console.log("=-------channelobj--------"+teamObj.channel.name);
+
       // PostData for sending emails
             var postData = {
                 email: member,
@@ -296,18 +293,15 @@ export function addTeamMember(req, res) {
         }
 
         userObj.team.push(teamObj);
-        console.log("----user---"+userObj);
         userObj.save();
         emailFunction(postData);
 
         //Add this user to the public channel of the teamObj
         var channelArr = teamObj.channel;
-        console.log("----array-------"+channelArr);
         var channelObj = null;
         for( var idx = 0; idx < channelArr.length; idx++ ) {
           var channelObj = channelArr[idx];
           if(channelObj.name === 'public'){
-            console.log("\n---------public channel----"+channelObj);
             // Just break out of the loop
             break;
           }

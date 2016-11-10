@@ -7,7 +7,7 @@ var router = express.Router();
 
 router.get('/',auth.isAuthenticated(), controller.index);
 router.get('/:id',auth.isAuthenticated(), controller.show);
-router.post('/', controller.create);//
+router.post('/', controller.create);
 router.put('/:email/createTeam',auth.hasRole('owner'), controller.createTeam);
 router.put('/:email/deleteTeam',auth.hasRole('owner'),controller.deleteTeam);
 router.get('/:email/getTeam',auth.isAuthenticated(), controller.owner);

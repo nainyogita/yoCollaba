@@ -121,16 +121,12 @@ describe('Team API:', function() {
             if(err) {
               return done(err);
             }
-
           });
           done();
       });
-
     });
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////// Internal server error 500. ////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
+
   describe('PUT /api/teams/:email/addTeamMember', function() {
     it('should respond with status 200 when adding a member', function(done) {
       var teamJson ={'team': {
@@ -145,7 +141,7 @@ describe('Team API:', function() {
         .expect(200)
         .end((err, res) => {
           if(err) {
-            console.log(err);
+
             return done(err);
           }
         });
@@ -170,7 +166,7 @@ describe('Team API:', function() {
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if(err) {
-            console.log(err);
+
             return done(err);
           }
         });

@@ -41,7 +41,7 @@ function email(owner){
 
     transporter.sendMail(mailOptions, function(err, info){
       if (err) {
-        console.log("An error has occured while sending email");
+        
       }else{
 
       }

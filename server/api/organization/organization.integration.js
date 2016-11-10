@@ -11,7 +11,7 @@ var newOrganization;
 var admin,owner;
 var tokenAdmin;
 var tokenOwner;
-var idAdmin,idOrg;
+var idAdmin, idOrg;
 
 var response;
 var orgJSON;
@@ -105,7 +105,7 @@ describe('Organization API:', function() {
             if(err) {
               return done(err);
             }
-            response = res.text;
+            response = res.body;
             done();
           });
       });
@@ -113,7 +113,7 @@ describe('Organization API:', function() {
     });
 
     it('should respond with NO because it does not exists', function() {
-      expect(response).to.equal('NO');
+      expect(response.status).to.equal('NO');
     });
   });
 
@@ -149,7 +149,7 @@ describe('Organization API:', function() {
 });
 
 ///////////////////////////////////////////////////////////////////////
-/////////////                      OWNER                 //////////////
+/////////////             OWNER              //////////////
 ///////////////////////////////////////////////////////////////////////
 describe('Owner API:', function() {
 
@@ -165,8 +165,6 @@ describe('Owner API:', function() {
       });
       return owner.save(function(err,data){
         idOrg = data._id;
-        // console.log("----saveed org-----");
-        // console.log(idOrg);
       }).then(function(){
 
             request(app)
@@ -186,9 +184,6 @@ describe('Owner API:', function() {
     });
   });
 
-////////////////////////////////////////////////////////////////////////////////
-/////// Unhandled rejection Error: Can't set headers after they are sent.///////
-////////////////////////////////////////////////////////////////////////////////
   /**
    * Test the updation of organisation status change
    * @param  {String}       Generic description
@@ -268,7 +263,7 @@ describe('Owner API:', function() {
         .put('/api/organizations/new@gmail.com/createTeam')
         .set('authorization', `Bearer ${tokenOwner}`)
         .send(orgTeam)
-        .expect(200)
+        .expect(204)
         .end((err, res) => {
           if(err) {
             return done(err);
@@ -298,7 +293,7 @@ describe('Owner API:', function() {
           .put('/api/organizations/new@gmail.com/deleteTeam')
           .set('authorization', `Bearer ${tokenOwner}`)
           .send(orgTeam)
-          .expect(200)
+          .expect(204)
           .end((err, res) => {
             if(err) {
               return done(err);
@@ -309,10 +304,6 @@ describe('Owner API:', function() {
       // Test cases end
     });
 
-
-    ////////////////////////////////////////////////////////////////////////////////
-    /////// Unhandled rejection Error: Can't set headers after they are sent.///////
-    ////////////////////////////////////////////////////////////////////////////////
     /**
      * Test the rejection of organisation
      * @param  {String}       Generic description
@@ -335,6 +326,4 @@ describe('Owner API:', function() {
           });
           // Test case end
         });
-
-
 });

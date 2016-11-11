@@ -32,11 +32,11 @@ export class OrganizationComponent {
   /**
   *   save the organization in db with approvalStatus=false on request for
   *   'register organization'
-  *   @param {JSON} org - The organization to be registered
+  *   @param {Object} org - The organization to be registered
   *   @extends register(form) function
   */
   registerOrg(org) {
-    
+
     return this.$http.post('/api/organizations', org)
     .success((response) => {
       if(response === "EXISTS"){
@@ -55,7 +55,7 @@ export class OrganizationComponent {
   /**
   *   save the organization in db with approvalStatus=false on request for
   *   'register organization'
-  *   @param {JSON} form - The form data organization to be registered
+  *   @param {Object} form - The form data organization to be registered
   */  register(form) {
 
     //Get domain of organization from email of owner

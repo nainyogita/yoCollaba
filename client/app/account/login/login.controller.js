@@ -38,7 +38,6 @@ export default class LoginController {
           password: this.user.password
         })
           .then((res) => {
-
             // Logged in, redirect to home
             if(res.role == 'admin')
               this.$state.go('admin');

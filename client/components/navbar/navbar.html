@@ -45,13 +45,20 @@
             <button class="btn btn-inverse btn-login" type="submit">
               Sign In
             </button>
-
             <br />
             <span class="help-block" ng-show="( form.email.$error.required && $ctrl.submitted ) ||  (form.password.$error.required && $ctrl.submitted)">
                Please enter your email and password.
             </span>
 
           </form>
+      </li>
+
+      <li ng-show="$ctrl.isLoggedIn()"><p class="navbar-text">Hello {{ $ctrl.getCurrentUser().name }}</p> </li>
+      <li ng-show="$ctrl.isLoggedIn()" ui-sref-active="active">
+        <a ui-sref="settings">&#9881;
+          <!-- <img src="assets/images/settings.png"
+          alt="SETTINGS" style="width:18px;height:18px;"/> -->
+        </a>
       </li>
       <li ng-show="$ctrl.isLoggedIn()">
         <a ui-sref="logout" >Logout</a>

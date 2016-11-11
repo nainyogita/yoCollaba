@@ -85,7 +85,7 @@ angular.module('gabfestApp', [ngCookies, ngResource, ngSanitize,
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {
         if(next.authenticate && !loggedIn) {
-          $location.path('/login');
+          $location.path('/main');
         }
       });
     });

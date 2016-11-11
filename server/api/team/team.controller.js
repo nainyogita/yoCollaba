@@ -161,7 +161,12 @@ export function getTeams(req,res){
     .catch(handleError(res));
 }
 
-// Gets a list of Teams
+/**
+ * Gets a list of Teams
+ * @param  {Object} req request object
+ * @param  {Object} res response
+ * @return {function}  promise
+ */
 export function getUserTeams(req,res){
   var email = req.params.email;
   return Team.find({'members' : email})
@@ -178,7 +183,12 @@ export function index(req, res) {
     .catch(handleError(res));
 }
 
-// Gets a single Team from the DB
+/**
+ * Gets a single Teams
+ * @param  {Object} req request object
+ * @param  {Object} res response
+ * @return {function}  promise
+ */
 export function show(req, res) {
   return Team.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
@@ -186,13 +196,12 @@ export function show(req, res) {
     .catch(handleError(res));
 }
 
-// Creates a new Team in the DB
-// TODO: Add the teamleader into the user schema
+
 /**
- * [create description]
- * @param  {[type]} req [description]
- * @param  {[type]} res [description]
- * @return {[type]}     [description]
+ * Creates a new Team in the DB
+ * @param  {Object} req request object
+ * @param  {Object} res response
+ * @return {function}  promise
  */
 export function create(req, res) {
   return Team.create(req.body)
@@ -201,7 +210,12 @@ export function create(req, res) {
 }
 
 
-// Upserts the given Team in the DB at the specified ID
+/*
+ * Upserts the given Team in the DB at the specified ID
+ * @param  {Object} req request object
+ * @param  {Object} res response
+ * @return {function}  promise
+ */
 export function upsert(req, res) {
   if (req.body._id) {
     delete req.body._id;
@@ -218,7 +232,12 @@ export function upsert(req, res) {
     .catch(handleError(res));
 }
 
-// Updates an existing Team in the DB
+/**
+ * Updates an existing Team in the DB
+ * @param  {Object} req request object
+ * @param  {Object} res response
+ * @return {function}  promise
+ */
 export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
@@ -230,7 +249,13 @@ export function patch(req, res) {
     .catch(handleError(res));
 }
 
-// Deletes a Team from the DB
+
+/**
+ * Deletes a Team from the DB
+ * @param  {Object} req request object
+ * @param  {Object} res response object
+ * @return {function}  promise
+ */
 export function destroy(req, res) {
   return Team.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))

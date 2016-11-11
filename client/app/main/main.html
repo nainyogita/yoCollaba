@@ -1,11 +1,20 @@
 <header class="hero-unit" id="banner">
 
     <div class="container">
-      <div class="row abc transparent">
+      <div class="row abc transparent" ng-hide="$ctrl.isLoggedIn()">
         <!-- Organization Registeration -->
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <h3><center>Organization Registeration</center></h3>
-          <form class="form" name="form" ng-submit="$ctrl.register(form)" novalidate ng-hide="$ctrl.submitted">
+          <!-- Show this pnce the form is submitted and data stored in db successfully -->
+          <div class="row">
+            <div class="col-sm-12" ng-show="$ctrl.orgSubmitted">
+              <text>
+                Your request has been sent to SAAS owner !
+                You will receive a mail once approved .
+              </text>
+            </div>
+          </div>
+          <form class="form" name="form" ng-submit="$ctrl.registerFormOrg(form)" novalidate>
 
             <!-- Get organization Name -->
             <div class="form-group" ng-class="{ 'has-success': form.name.$valid && $ctrl.submitted,
@@ -20,7 +29,7 @@
             <!-- Get owner Name -->
             <div class="form-group" ng-class="{ 'has-success': form.owner.name.$valid && $ctrl.submitted,
             'has-error': form.owner.name.$invalid && $ctrl.submitted }">
-              <input type="owner.name" name="owner.name" class="form-control" ng-model="$ctrl.org.owner.name"
+              <input type="text" name="owner.name" class="form-control" ng-model="$ctrl.org.owner.name"
               required
               mongoose-error placeholder="Owner Name"/>
               <p class="help-block" ng-show="form.owner.name.$error.owner.name && $ctrl.submitted">
@@ -37,7 +46,7 @@
           <!-- Get owner email -->
             <div class="form-group" ng-class="{ 'has-success': form.owner.email.$valid && $ctrl.submitted,
             'has-error': form.owner.email.$invalid && $ctrl.submitted }">
-              <input type="owner.email" name="owner.email" class="form-control" ng-model="$ctrl.org.owner.email"
+              <input type="email" name="owner.email" class="form-control" ng-model="$ctrl.org.owner.email"
               required
               mongoose-error placeholder="Email Address"/>
               <p class="help-block" ng-show="form.owner.email.$error.owner.email && $ctrl.submitted">
@@ -65,6 +74,13 @@
          */ -->
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 right">
           <h3><center>User Signup</center></h3>
+          <div class="row">
+            <div class="col-sm-12" ng-show="$ctrl.userSubmitted">
+              <text>
+                You have been successfully reistered.Kindly login with your credentials.
+              </text>
+            </div>
+          </div>
           <form class="form" name="form" ng-submit="$ctrl.register(form)" novalidate>
             <div class="form-group" ng-class="{ 'has-success': form.name.$valid && $ctrl.submitted,
                                                 'has-error': form.name.$invalid && $ctrl.submitted }">

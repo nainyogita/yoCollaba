@@ -106,7 +106,7 @@ export function show(req, res) {
  * @param  {json} req team json to be created
  * @param  {json} res org updated
  * @param {String} email - email id of the owner
- * @return {string}
+ *  @return {function}  promise
  */
  export function createTeam(req, res) {
    var userEmail = req.params.email;
@@ -197,99 +197,14 @@ export function show(req, res) {
            });
       });
  }
-// export function createTeam(req, res) {
-//   var userEmail = req.params.email;
-//   return Organization.findOne({'owner.email':userEmail})
-//   .populate('team')
-//   .exec()
-//     .then(org => {
-//       if(!org)
-//       {
-//         //If organization already exists return with status 401
-//         return res.status(401).end();
-//       }
-//
-//       var teamObj = new Team(req.body.orgTeam.teams);
-//       /**
-//       *   adding team leader as a member of team created
-//       *   by owner of organization
-//       */
-//       var teamHeads = teamObj.thead;
-//       for(var i = 0 ; i<teamHeads.length ; i++){
-//         teamObj.members.push(teamObj.thead[i]);
-//       }
-//
-//       /**
-//       * Generating a public channel for each newly created team-
-//       * add team head into the public channel
-//       */
-//       var publicChannel = new Channel({
-//             name : 'public',
-//             info : 'A default channel which is public',
-//             members : teamHeads,
-//             type : 'public'
-//       });
-//
-//       teamObj.channel.push(publicChannel);//Push Public channel into the Team schema
-//       publicChannel.save();//save team in Organization schema
-//
-//       // Push the created team into the team array of Organisation schema
-//       org.team.push(teamObj);
-//       // PostData for sending emails
-//             var postData = {
-//                 email: '',
-//                 name: '',
-//                 message: 'This email is to notify you that you are now the'
-//                 +' team lead of the newly formed team '+teamObj.name+'.Welcome to '
-//                 +'the gabfest family!!',
-//                 password:''
-//               };
-//
-//       /*
-//       * save team in user table for owner
-//       */
-//         for(let i = 0; i < teamObj.thead.length; i++){
-//           User.findOne({'email':teamObj.thead[i]}).exec()
-//           .then(user =>{
-//             if(!user) {
-//               var user = new User({
-//                 'email' : teamObj.thead[i],
-//                 'password' : 'password',
-//                 'provider' : 'local'
-//               });
-//
-//             }
-//             else{
-//               //use existing password for already registered users
-//               postData.password = 'ur existing password';
-//             }
-//             //json key values for sending email
-//             postData.name = teamObj.thead[i];
-//             postData.email = teamObj.thead[i];
-//
-//             user.team.push(teamObj);
-//             user.channel.push(publicChannel);
-//             user.organization.push(org);
-//             user.role = "thead";
-//             user.save();
-//
-//             emailFunction(postData);// Call email function to send the email to the user
-//           });
-//         }// for loop ends here
-//
-//
-//       teamObj.save();//save team in teams table
-//
-//       //save team in Organization schema
-//       org.save();
-//      })
-//      .then(respondWithResult(res));
-// }
+
 
 
 /**
 * Delete a team
-* @param {string} email - email id of the owner logged in
+* @param  {Object} req request object
+* @param  {Object} res response object
+* @return {function}  promise
 */
 export function deleteTeam(req, res) {
   var userEmail = req.params.email;
@@ -337,7 +252,12 @@ export function deleteTeam(req, res) {
 
 
 
-// Creates a new Organization in the DB
+/**
+* Creates a new Organization in the DB
+* @param  {Object} req request object
+* @param  {Object} res response object
+* @return {function}  promise
+*/
 export function create(req, res) {
   let id = null;
  Organization.findOne({owner : req.body.owner}).exec()
@@ -363,7 +283,12 @@ export function create(req, res) {
    .catch(handleError(res));
 }
 
-// Upserts the given Organization in the DB at the specified ID
+/**
+* Upserts the given Organization in the DB at the specified ID
+* @param  {Object} req request object
+* @param  {Object} res response object
+* @return {function}  promise
+*/
 export function upsert(req, res) {
   if(req.body._id) {
     delete req.body._id;
@@ -373,7 +298,12 @@ export function upsert(req, res) {
     .catch(handleError(res));
 }
 
-// Updates an existing Organization in the DB
+/**
+ * Updates an existing Organization in the DB
+* @param  {Object} req request object
+* @param  {Object} res response object
+* @return {function}  promise
+*/
 export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
@@ -385,7 +315,12 @@ export function patch(req, res) {
     .catch(handleError(res));
 }
 
-// Deletes a Organization from the DB
+/**
+*  Deletes a Organization from the DB
+* @param  {Object} req request object
+* @param  {Object} res response object
+* @return {function}  promise
+*/
 export function destroy(req, res) {
   return Organization.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))

@@ -61,7 +61,7 @@ org : Org = {
 
   /**
   *  To add an new team
-  *  @param {Json} form
+  *  @param {Object} form Json object containing new team information
   */
   addTeam(form) {
     this.submitted = true;

@@ -4,19 +4,19 @@
 }
 
 .btn-delete{
-  font-size:20px;
+  font-size:12px;
   background-color: #ef5350;
   border-radius: 0px;
-  font-weight: bold;
 }
 
 .team-table{
-  border: 2px solid #337ab7;
+  border: 2px solid grey;
+  /*border: 2px solid #337ab7;*/
   border-radius: 15px;
 }
 
 .fix-top-right {
   position: absolute;
-  top: 0;
-  right : 0;
+  top: 1%;
+  right : 5%;
 }

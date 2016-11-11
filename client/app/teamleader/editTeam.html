@@ -1,38 +1,39 @@
 <!-- html page for editing team information  -->
 <div class="container-fluid">
+	<br><br>
 	<div class="row">
-		<div class="col-sx-12 col-sm-1 col-md-1 col-lg-1"></div>
-		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+		<div class="col-sx-12 col-sm-1 col-md-1 col-lg-1" ></div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"
+		style="padding-right:5%;border-right:2px solid grey;">
 			<form role="form" class="form-horizontal" name="editForm">
 				<div class="form-group">
 					<label for="name">
 						NAME
 					</label>
-					<input type="text" class="form-control" id="name" ng-model='teamleader.parentScope.team.name'/>
+					<input type="text" class="form-control" id="name"
+						ng-model='teamleader.parentScope.team.name'/>
 				</div>
 				<div class="form-group">
 					<label for="info">
 						INFORMATION
 					</label>
-					<input type="text" class="form-control" id="info" ng-model='teamleader.parentScope.team.info'/>
+					<input type="text" class="form-control" id="info"
+					ng-model='teamleader.parentScope.team.info'/>
 				</div>
-				<button type="submit" class="btn btn-default" ng-click="teamleader.edit(editForm,teamleader.parentScope.team._id)">
+				<button type="submit" class="btn btn-primary"
+				 ng-click="teamleader.edit(editForm,teamleader.parentScope.team._id)">
 					Update
 				</button>
 			</form>
 		</div>
 		<div class="col-sx-12 col-sm-1 col-md-1 col-lg-1"></div>
 		<div class="col-sx-12 col-sm-4 col-md-4 col-lg-4">
-			Members :
-			<ul ng-repeat='members in teamleader.parentScope.team.members'>
-				<li>{{members}}</li>
-			</ul>
-
 			<!-- form to edit new team member  -->
-			<form class="form-horizontal" role="form" name="teamMemberForm" ng-submit="teamleader.addTeamMember(teamMemberForm)">
+			<form class="form-horizontal" role="form" name="teamMemberForm"
+			ng-submit="teamleader.addTeamMember(teamMemberForm)">
 				<div class="form-group" ng-class="{ 'has-success': teamMemberForm.member.$valid && vm.submitted,
 				'has-error': teamMmeberForm.member.$invalid && vm.submitted }">
-					<br><br>Add a new member to the {{teamleader.parentScope.team.name}} team : <br>
+					Add a new member to the {{teamleader.parentScope.team.name}} team : <br>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="member" required ng-model=teamleader.team.member />
 					<p class="help-block" ng-show="teamMemberForm.team.member.$error.required && vm.submitted">
@@ -40,10 +41,18 @@
 					</p>
 				</div>
 				<div class="col-sm-2">
-					<button  class="btn btn-primary btn-sm btn-circle" ng-click='teamleader.add(teamleader.parentScope.team.name)'>&#10010;</button>
+					<button  class="btn btn-primary btn-sm btn-circle"
+					ng-click='teamleader.add(teamleader.parentScope.team.name)'>&#10010;</button>
 				</div>
 			</div>
 		</form>
+		<br><br>
+			Existing Members :
+			<ul ng-repeat='members in teamleader.parentScope.team.members'>
+				<li>{{members}}</li>
+			</ul>
 	</div>
 </div>
+
+<br><br>
 </div>

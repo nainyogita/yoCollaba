@@ -118,7 +118,7 @@ export default class TeamleaderController {
      var team = this.selectedOptionToShow;
      var channels = team.channel;
      for( var idx = 0; idx < channels.length; idx++ ) {
-       
+
        if( channels[idx]['name'] === 'public' && channels[idx]['type'] === 'public') {
          this.membersList = channels[idx]['members'];
          this.membersList = this.membersList.map(function(member){
@@ -178,7 +178,6 @@ export default class TeamleaderController {
       div.setAttribute("contenteditable", false);
     });
     // Then save the data here
-    // Call to some API, perhaps using PUT method
     this.updateChannel();
   }
 
@@ -211,7 +210,6 @@ export default class TeamleaderController {
 
    /**
     * Update the channel information
-    *
     */
    updateChannel() {
      var newMembers = this.membersListSelected.map(function(data){
@@ -244,7 +242,11 @@ export default class TeamleaderController {
       this.nameSelected = name;
   }
 
-  /* Form to edit the credentials of the team */
+  /**
+   * Form to edit the credentials of the team
+   * @param  {Object} form Team information to be edited
+   * @param  {string} id   Team id to be edited
+   */
   edit(form,id){
     this.submitted = true;
 
@@ -262,15 +264,22 @@ export default class TeamleaderController {
     this.member ="";
   }
 
-  // Remove members while creating channel
+
+/**
+ * Remove members while creating channel
+ * @param  {integer} index index of member to be spliced
+ */
   memListRem(index){
     this.channelJSON.members.splice(index,1);
   }
 
-  // To add a new team member
+
+/**
+ * To add a new team member
+ * @param {Object} form Json Object to add team member
+ */
   addTeamMember(form) {
     this.submitted = true;
-
     if(form.$valid) {
 
       return this.Auth.addTeamMember({

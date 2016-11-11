@@ -83,9 +83,9 @@
 							<tr>
 								<td colspan = "3">
 									{{ team.name }}
-									<button type="button" class="btn btn-danger btn-circle
+									<button type="button" class="btn btn-danger
 									pull-right btn-delete fix-top-right" title="delete this team"
-									ng-click = "owner.delete(team.name)">&#10006;</button>
+									ng-click = "owner.delete(team.name)">Delete</button>
 								</td>
 							</tr>
 						</thead>
@@ -127,12 +127,6 @@
 									{{ team.members.length }}
 								</td>
 							</tr>
-							<!-- <tr>
-								<td colspan = "3" class = "text-right">
-									<button type="button" class="btn btn-danger btn-circle btn-delete"
-									ng-click = "owner.delete(team.name)">&#215;</button>
-								</td>
-							</tr> -->
 						</tbody>
 					</table>
 				</div>

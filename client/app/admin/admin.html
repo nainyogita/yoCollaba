@@ -1,0 +1,84 @@
+<!-- This template replaces the ui-view div in index.html -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <div class="btn-group btn-group-md">
+        <button class="btn btn-inverse btn-register {{admin.showOrg}}" type="button"
+                ng-click="admin.showOrgs()">
+          Active Organizations
+        </button>
+        <button class="btn btn-inverse btn-register {{admin.showReq}}" type="button"
+                ng-click="admin.showRequests()">
+          Organization Requests
+        </button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <!-- div showing pending requests for organization approval(called ON CLICK) -->
+  <!-- METHOD 1 : Custom Filter created in controller -->
+  <div class="col-md-12" ng-show="admin.showReq">
+    <!-- Create a table for requests -->
+    <table class="table table-striped">
+      <thead>
+        <th>Organisation Name</th>
+        <th>Domain</th>
+        <th>Owner Name</th>
+        <th>Owner Email</th>
+        <th>
+          Action
+        </th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="req in admin.orgRequests">
+          <td>{{req.name}}</td>
+          <td>{{req.domain}}</td>
+          <td>{{req.owner.name}}</td>
+          <td>{{req.owner.email}}</td>
+
+          <td ng-click="admin.toggleHide($index)" ng-hide="req.hide">
+            <!-- Call accept request function and pass the id of the organization
+            this id is _id which is stored in db -->
+            <button class="btn btn-success" ng-click="admin.acceptReq(req._id,req.owner,$index)">Accept</button>
+            <button class="btn btn-danger" ng-click="admin.rejectReq(req._id,$index)">Reject</button>
+          </td>
+
+          <td ng-show="req.hide">
+            <!-- Call accept request function and pass the id of the organization
+            this id is _id which is stored in db -->
+            Request {{req.action}}
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+    <br /><br /><br />
+    <hr>
+    <br />
+  </div>
+
+<!-- Div showing approved Organizations -->
+<!-- METHOD 2: Filter used in html -->
+  <div class="col-md-12" ng-show="admin.showOrg">
+    <table class="table table-striped">
+      <thead>
+        <th>Organisation Name</th>
+        <th>Domain</th>
+        <th>Owner Name</th>
+        <th>Owner Email</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="req in admin.originalOrg | filter: {'approvalStatus' : 'true'}">
+          <td>{{req.name}}</td>
+          <td>{{req.domain}}</td>
+          <td>{{req.owner.name}}</td>
+          <td>{{req.owner.email}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <br /><br /><br />
+    <hr>
+    <br />
+  </div>
+
+</div>

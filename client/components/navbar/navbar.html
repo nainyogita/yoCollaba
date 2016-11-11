@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="./index.css">
+<div class="navbar navbar-default navbar-static-top bar">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" ng-click="$ctrl.isCollapsed = !$ctrl.isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <span class = "drop-cap">g</span>abfest
+      </a>
+    </div>
+    <div uib-collapse="$ctrl.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <!-- <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
+            <a ui-sref="{{item.state}}">{{item.title}}</a>
+        </li> -->
+        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
+        <li ng-show="$ctrl.isOwner()" ui-sref-active="active"><a ui-sref="owner.dashboard">Owner</a></li>
+        <li ng-show="$ctrl.isUser() ||$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="home">UserHome</a></li>
+        <li ng-show="$ctrl.isTeamleader()" ui-sref-active="active"><a ui-sref="teamleader.dashboard">Team Leader</a></li>
+      </ul>
+      <ul class="nav navbar-nav pull-right">
+        <li ng-hide="$ctrl.isLoggedIn()">
+          <!-- Login form starts here -->
+          <form role = "form" class="form-inline login" name="form"
+          ng-submit="$ctrl.login(form)" novalidate>
+            <div class="form-group">
+              <input type="email" name="email" class="form-control email" placeholder="Email" ng-model="$ctrl.user.email" required>
+              <br />
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" class="form-control email" placeholder="Password" ng-model="$ctrl.user.password" required>
+              <br />
+            </div>
+            <!-- <p class="help-block">{{ $ctrl.errors.login }}</p> -->
+            <button class="btn btn-inverse btn-login" type="submit">
+              Sign In
+            </button>
+            <br />
+            <span class="help-block" ng-show="( form.email.$error.required && $ctrl.submitted ) ||  (form.password.$error.required && $ctrl.submitted)">
+               Please enter your email and password.
+            </span>
+          </form>
+      </li>
+      <li ng-show="$ctrl.isLoggedIn()"><p class="navbar-text">Hello {{ $ctrl.getCurrentUser().name }}</p> </li>
+      <li ng-show="$ctrl.isLoggedIn()" ui-sref-active="active">
+        <a ui-sref="settings">&#9881;
+          <!-- <img src="assets/images/settings.png"
+          alt="SETTINGS" style="width:18px;height:18px;"/> -->
+        </a>
+      </li>
+      <li ng-show="$ctrl.isLoggedIn()">
+        <a ui-sref="logout" >Logout</a>
+      <!-- Login form ends here -->
+      </li>
+    </ul>
+    </div>
+  </div>
+</div>

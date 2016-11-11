@@ -1,0 +1,83 @@
+<!-- This template is inserted in index.html in the ui-view directive -->
+<link rel="stylesheet" href="organization.css">
+
+<div class="container hero-login">
+  <div class="row abc transparent-org">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <h3><center>Register your Organization here!</center></h3>
+      <form class="form" name="form" ng-submit="vm.register(form)" novalidate ng-hide="vm.submitted">
+
+        <!-- Get organization Name -->
+        <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
+        'has-error': form.name.$invalid && vm.submitted }">
+        <!-- <label>Name of Your Organization</label> -->
+
+        <input type="text" name="name" class="form-control" ng-model="vm.org.name"
+        required placeholder="Name of organization"/>
+        <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
+          A name is required
+        </p>
+      </div>
+
+      <!-- Get owner Name -->
+      <div class="form-group" ng-class="{ 'has-success': form.owner.name.$valid && vm.submitted,
+      'has-error': form.owner.name.$invalid && vm.submitted }">
+      <!-- <label>Your Name</label> -->
+
+      <input type="owner.name" name="owner.name" class="form-control" ng-model="vm.org.owner.name"
+      required
+      mongoose-error placeholder="Owner Name"/>
+      <p class="help-block" ng-show="form.owner.name.$error.owner.name && vm.submitted">
+        Doesn't look like a valid name.
+      </p>
+      <p class="help-block" ng-show="form.owner.name.$error.required && vm.submitted">
+        What's your name?
+      </p>
+      <p class="help-block" ng-show="form.owner.name.$error.mongoose">
+        {{ vm.errors.owner.name }}
+      </p>
+    </div>
+
+    <!-- Get owner email -->
+    <div class="form-group" ng-class="{ 'has-success': form.owner.email.$valid && vm.submitted,
+    'has-error': form.owner.email.$invalid && vm.submitted }">
+    <!-- <label>Your Email Address</label> -->
+
+    <input type="owner.email" name="owner.email" class="form-control" ng-model="vm.org.owner.email"
+    required
+    mongoose-error placeholder="Email Address"/>
+    <p class="help-block" ng-show="form.owner.email.$error.owner.email && vm.submitted">
+      Doesn't look like a valid email.
+    </p>
+    <p class="help-block" ng-show="form.owner.email.$error.required && vm.submitted">
+      What's your email address?
+    </p>
+    <p class="help-block" ng-show="form.owner.email.$error.mongoose">
+      {{ vm.errors.owner.email }}
+    </p>
+  </div>
+
+
+  <button class="btn btn-inverse btn-primary btn-register col-lg-12 col-md-12 col-sm-12 col-xs-12" type="submit">
+  Register
+  </button>
+
+
+
+</form>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
+</div>
+
+  <!-- Show this pnce the form is submitted and data stored in db successfully -->
+  <div class="row">
+    <div class="col-sm-12" ng-show="vm.submitted">
+      <h3>
+        Your request has been sent to SAAS owner !
+        You will receive a mail once approved .
+      </h3>
+    </div>
+  </div>
+
+</div>

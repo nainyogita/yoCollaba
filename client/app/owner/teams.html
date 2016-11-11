@@ -1,0 +1,72 @@
+<!-- page for creating a new team  -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <h3>
+        Create Teams
+      </h3>
+      <form class="form-horizontal" role="form" name="teamForm" ng-submit="owner.addTeam(teamForm)">
+        <div class="form-group" ng-class="{ 'has-success': teamForm.teamName.$valid && vm.submitted,
+                                            'has-error': teamForm.teamName.$invalid && vm.submitted }">
+
+          <label for="teamName" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label">
+            Team Name
+          </label>
+          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <input type="teamName" class="form-control" id="teamName" required ng-model=owner.org.teams.name />
+            <p class="help-block" ng-show="teamForm.teamName.$error.required && vm.submitted">
+              A name is required
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-success': teamForm.teamHead.$valid && vm.submitted,
+                                             'has-error': teamForm.teamHead.$invalid && vm.submitted }">
+ 					<label for="teamHead" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label">
+ 						Team Heads
+ 					</label>
+   							<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+   								<input type = "text" class="form-control" id="teamHead"
+   											ng-model = "owner.head"/>
+   							</div>
+   							<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+   								<button type="button" class="btn btn-primary btn-circle"
+                  ng-click="owner.addThead()">&#10010;</button>
+   							</div>
+
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+   						<div ng-repeat="members in owner.org.teams.thead">
+   							<div>
+   								<span class="chip">
+   								  {{members}}
+   									<span class="closebtn" ng-click="owner.theadListRem($index)">&times;</span>
+   								</span>
+   							</div>
+   						</div>
+ 					  </div>
+ 			  </div>
+
+        <div class="form-group">
+          <label for="teamInfo" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label">
+            Description
+          </label>
+          <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <textarea class="form-control" id="teamInfo"
+            ng-model=owner.org.teams.info></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <button type="submit" class="btn btn-primary">
+              Create
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"></div>
+  </div>
+</div><!-- container-fluid ends here -->

@@ -1,0 +1,45 @@
+<div flex layout="row">
+
+    <md-sidenav flex="15" md-is-locked-open="true" class="md-whiteframe-z1">
+        <md-content layout="column">
+            <md-button class="btn1" ng-repeat="team in vmHome.teams" ng-click="vmHome.selectedTeam(team)">
+                {{team.name}}
+            </md-button>
+        </md-content>
+    </md-sidenav>
+
+    <div layout="column" flex="85" ng-hide="vmHome.team" class="card">
+        <md-card layout-align="center center">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">Hi {{vmHome.user.name}}</span>
+                    <span class="md-subhead">Select your team to Collaborate!</span>
+                </md-card-title-text>
+            </md-card-title>
+
+            <md-card-content layout="row" layout-align="space-between">
+                <div class="md-media-xl card-media"> <img ng-src="assets/images/collaborate.png" alt="COLLABORATE IT!">
+                </div>
+            </md-card-content>
+        </md-card>
+    </div>
+
+
+    <div layout="column" flex="85" ng-show="vmHome.team">
+
+        <md-whiteframe class="md-whiteframe-5dp" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout="" layout-align="center center">
+            <span class="selectedTeam">  {{vmHome.selectedTeamInfo.name}}</span>
+        </md-whiteframe>
+
+
+        <md-tabs md-selected="selectedIndex" md-stretch-tabs="always" md-dynamic-height md-border-bottom>>
+            <md-tab label="Chat" ui-sref="home.chat"></md-tab>
+            <md-tab label="Wall" ui-sref="home.wall"></md-tab>
+        </md-tabs>
+
+        <div id="content" ui-view flex> </div>
+
+    </div>
+</div>
+<!-- </div>
+</div> -->

@@ -1,0 +1,134 @@
+<!-- Displays private and public walls -->
+<md-content>
+    <md-tabs md-dynamic-height md-border-bottom  md-stretch-tabs="always" class="md-primary md-hue-2">
+
+      <md-tab label="{{vmHome.domain}} Organisation Wall" ng-click="vm.showWalls(vmHome.selectedTeamInfo,'public')">
+        <md-content class="md-padding">
+
+          <!-- Public Wall -->
+          <div class="container-fluid wallback" ng-show="vm.showPublicWall">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-header wallname">
+                  <h1>
+                    {{vm.publicWall.domain}} Organization Wall
+                    <small>{{vm.publicWall.name}}</small>
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+
+        <div class="input-group">
+
+      <div layout="row">
+
+        <md-input-container class="md-block" flex="50">
+          <label>Enter wall post Title </label>
+          <input ng-model="vm.wallPostTitle">
+        </md-input-container>
+
+        <md-input-container class="md-block" flex="50">
+          <label>Enter Post Description</label>
+          <input ng-model="vm.wallPostDescription">
+        </md-input-container>
+
+      </div>
+
+      <span class="input-group-btn">
+        <md-button class="md-raised md-primary" type="button" ng-click="vm.addWallPost('public')">Post</md-button>
+      </span>
+
+    </div>
+
+            <div class="row well p" ng-repeat ="post in vm.publicWall.posts">
+
+              <div class="col-md-12">
+                  <h4 class="text-left">POST TITLE {{post.title}}</h4>
+                  <h4 class="text-right"> Pinned by: {{post.author}}</h4>
+
+              </div>
+
+              <div class="col-md-4">
+                <img alt="Post Image" src="http://lorempixel.com/140/140/" class="img-thumbnail" style="width:40px;height:40px;" />
+
+              </div>
+              <div class="col-md-8">
+                <p>
+                  {{post.description}}
+                </p>
+              </div>
+              <h6 ng-click="vm.deleteWallPost('public', $index)">Delete</h6>
+            </div>
+
+          </div>
+        </md-content>
+      </md-tab>
+
+      <md-tab ng-if="vmHome.team" label="{{vmHome.selectedTeamInfo.name}} Team Wall" ng-click="vm.showWalls(vmHome.selectedTeamInfo,'private')">
+        <md-content class="md-padding">
+          <!-- Private Wall -->
+          <div class="container-fluid wallback" ng-show="vm.showPrivateWall">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-header wallname">
+                  <h1>
+                    {{vm.privateWall.name}} Wall
+                    <small>{{vm.privateWall.domain}}</small>
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+
+          <div layout="row">
+
+            <md-input-container class="md-block" flex="50">
+              <label>Enter wall post Title </label>
+              <input ng-model="vm.wallPostTitle">
+            </md-input-container>
+
+            <md-input-container class="md-block" flex="50">
+              <label>Enter Post Description</label>
+              <input ng-model="vm.wallPostDescription">
+            </md-input-container>
+
+          </div>
+
+          <span class="input-group-btn">
+            <md-button class="md-raised md-primary" type="button" ng-click="vm.addWallPost('private')">Post</md-button>
+          </span>
+
+          </div>
+
+
+
+            <div class="row well p" ng-repeat ="post in vm.privateWall.posts">
+              <div class="col-md-12">
+
+                  <h4 class="text-left">POST TITLE {{post.title}}</h4>
+                  <h4 class="text-right"> Pinned by: {{post.author}}</h4>
+
+              </div>
+
+              <div class="col-md-4">
+                <img alt="Post Image" src="http://lorempixel.com/140/140/" class="img-thumbnail" style="width:40px;height:40px;" />
+              </div>
+              <div class="col-md-8">
+                <p>
+                  {{post.description}}
+                </p>
+              </div>
+                <h6 ng-click="vm.deleteWallPost('private', $index)">Delete</h6>
+            </div>
+
+          </div>
+
+        </md-content>
+      </md-tab>
+
+    </md-tabs>
+</md-content>

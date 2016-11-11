@@ -1,0 +1,157 @@
+<!-- <link rel="stylesheet" href="chat.css"> -->
+<!-- Display chat page -->
+<div ng-show="vmHome.team">
+  <div class="btn btn-default" ng-click="vm.showChannels(vmHome.selectedTeamInfo)" >
+    Show Channels
+  </div>
+</div>
+
+
+<div class="container-fluid">
+
+  <div class="row">
+
+    <div class="col-md-3">
+      <div ng-show="vm.chShow">
+        <h3>
+          Channels
+        </h3>
+        <ul class="list-unstyled">
+          <li>
+            Public Channels
+          </li>
+          <li ng-repeat="channel in vm.publicChannels" ng-click="vm.groupChat(channel)">
+            <div class="btn btn-default" >
+              {{channel.name}}
+            </div>
+          </li>
+
+          <li>
+            PrivateChannels
+          </li>
+          <li ng-repeat="channel in vm.privateChannels" >
+            <a ng-click="vm.groupChat(channel)" class="link">
+              {{channel.name}}
+            </a>
+            <span class="btn btn-default" ng-click="vm.leaveGroup(channel)" ng-if="vm.allowLeaving">x</span>
+          </li>
+        </ul>
+
+      </div>
+
+      <div class="promote" ng-hide="vm.chShow">
+        <h3>Lets</h3>
+        <img src="assets/images/collaborate.png" alt="COLLABORATE IT!">
+        <h3>Collaborate!</h3>
+      </div>
+    </div>
+
+    <div class="col-md-6 chatbox">
+      <h5>
+        CHAT BOX   ##{{vm.roomTitle}}
+      </h5>
+
+      <!-- <ul ng-repeat='chat in chatCtrl.chatHistory' class="list-group">
+      <li class="list-group-item"><span class="well">{{chat.sender}}</span>&nbsp;<span class="message" ng-bind-html="chat.message"> {{chat.message}}</span></li>
+    </ul> -->
+<!-- {{vm.date|date:'yyyy-MM-dd HH:mm:ss'}} -->
+    <ul class="list-unstyled">
+
+      <li ng-repeat="chat in vm.chatHistory">
+
+        <span ng-if="vm.dateChanged(chat.timestamp)" class="datechanged">
+          {{chat.timestamp|date:'yyyy-MM-dd'}}
+          <br/>
+        </span>
+
+        <span class="">{{chat.sender}}</span> &nbsp; ::
+        <span class="message" ng-bind-html="chat.message"> {{chat.message}} </span>
+        <span class="time">
+          {{chat.timestamp|date:'yyyy-MM-dd HH:mm:ss'}}
+        </span>
+
+        <div ng-click="vm.toggleHide($index)" ng-hide="chat.hide">
+          <img ng-hide="vm.pc" src="assets/images/wall.png" alt="WALL IT!" style="width:20px;height:20px;" ng-click="vm.saveForWall(chat.sender,chat.message)">
+        </div>
+        <div ng-show="chat.hide">
+          <img src="assets/images/pinned.png" alt="PINNED!" style="width:20px;height:20px;">
+        </div>
+
+      </li>
+    </ul>
+
+    <div class="row chatinput">
+
+      <div ng-model = "vm.typing">
+        {{ vm.typing }}
+      </div>
+      <!-- <div class="col-md-7"> -->
+      <input type="text" placeholder="Enter your Message" ng-model="vm.message" ng-keyup="vm.isTyping()"/>
+      <!-- Upload on file select -->
+      <button type="button" class="btn btn-sm btn-primary" ngf-select="vm.upload($file)">&#10010;</button>
+      <button type="button" class="btn btn-sm btn-primary" ng-click="vm.showEmoji=!vm.showEmoji" >&#9786;</button>
+      <br><br>
+
+
+      <button type="button" class="btn btn-sm btn-primary" ng-click="vm.sendMessage()">
+        Send Message
+      </button>
+
+    </div>
+
+    <div class="col-md-12 emoji-box" ng-show="vm.showEmoji">
+      <button type="button" class="btn btn-default" ng-repeat = "(key, value) in vm.emojiList" ng-click="vm.addThisEmoji(key, value)">
+        {{value}}
+      </button>
+    </div>
+
+    <!-- Progress Bar for Upload File -->
+    <div class="row" ng-show="vm.progressVisible">
+      File:
+      <div style="font:smaller">{{vm.f.name}}
+        <span class="progress" ng-show="vm.f.progress >= 0">
+          <div ng-bind="vm.f.progress + '%'"></div>
+          <div class="progress-bar">
+            <div class="uploaded" ng-style="{'width': vm.f.progress+'%'}"></div>
+          </div>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Display team members and online users -->
+  <div class="col-md-3 odiv">
+    <h4>
+      Online Users
+    </h4>
+
+    <ul class="list-unstyled">
+      <!-- New Code :  Show all team members -->
+      <li ng-repeat="ou in vmHome.tm" ng-click="vm.privateChat(ou)">
+        <!-- <div class="btn btn-default online"> -->
+        {{ou.name}}
+        <!-- Show unread messages -->
+        <div ng-repeat = "um in ou.unreadMsg" ng-show="um.participant == vm.user.email">
+          {{um.num}}
+        </div>
+
+        <img ng-show="vm.checkMemberOnline(ou)" src="assets/images/online.png" alt="Online" style="width:10px;height:10px;" />
+
+
+      </li>
+    </ul>
+  </div>
+
+</div>
+<br />
+<br />
+<div class="row">
+  <div class="col-md-12 foot">
+    Want to Collabortely work on Wall ?
+    <a class="btn btn-default" ui-sref="home.wall">
+      Wall
+    </a>
+  </div>
+</div>
+</div>

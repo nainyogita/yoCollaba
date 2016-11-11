@@ -1,0 +1,191 @@
+.well{
+  /*background-color: #CFA065;*/
+  background-color: #F2DBBF;
+  /*color:#1F4151;*/
+  color: black;
+}
+
+.well table{
+  border:none;
+  outline:none;
+}
+
+.edit-icon, .edit-icon:hover{
+  text-decoration: none;
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  color: black;
+}
+
+.team_heading{
+  font-family: Petrona;
+  font-size:16px;
+  text-transform: capitalize;
+}
+
+.team_info_heading{
+  font-family: Petrona;
+  font-size:13px;
+  text-transform: capitalize;
+}
+
+.team_info{
+  font-size:12px;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+
+ .chip {
+     display: inline-block;
+     padding: 0 10px;
+     margin: 5px;
+     border-radius: 15px;
+    background-color: #f1f1f1;
+     float:left;
+ }
+
+ .closebtn {
+    cursor: pointer;
+}
+
+.closebtn:hover {
+     color: #000;
+ }
+
+ .onoffswitch {
+    position: relative; width: 90px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.onoffswitch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 22px;
+    padding: 0;
+    ine-height: 22px;
+    /*font-size: 14px; */
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+    content: "Public";
+    padding-left: 10px;
+    background-color: #34A7C1; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+    content: "Private";
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.onoffswitch-switch {
+    display: block; width: 18px; margin: 2px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 64px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0px;
+}
+
+.inline{
+  display: inline;
+}
+
+table.channel-edit td:nth-child(odd) {
+  font-family: 'Petrona';
+  font-weight: bold;
+}
+
+table.channel-edit td:nth-child(even) {
+  font-size: 12px;
+}
+
+table.channel-edit {
+  border-radius : 4%;
+}
+
+/*Well, relatively borderless hack*/
+.borderless tbody tr td,
+.borderless tbody tr th,
+.borderless thead tr th,
+.borderless thead tr td,
+.borderless tfoot tr th,
+.borderless tfoot tr td {
+    border: none;
+}
+
+hr.divider {
+	border-top: 1px solid #8c8b8b;
+	text-align: center;
+}
+
+hr.divider:after {
+	content: '§';
+	display: inline-block;
+	position: relative;
+	top: -14px;
+	padding: 0 10px;
+	background: white;
+	color: #8c8b8b;
+	font-size: 18px;
+	-webkit-transform: rotate(60deg);
+	-moz-transform: rotate(60deg);
+	transform: rotate(60deg);
+}
+
+
+.edit-team{
+  border: 1px solid grey;
+}
+
+.edit-team-head{
+  background-color:#455a64;
+  padding:1%;
+  color:white;
+  font-family: 'Kreon';
+  letter-spacing: 1px;
+}
+.edit-form{
+  padding:2%;
+}
+
+.editForm-head{
+  font-family: 'Petrona';
+}
+
+.hr-member {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+.members{
+  font-size: 12px;
+}

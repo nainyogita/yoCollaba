@@ -1,0 +1,68 @@
+.link{
+  cursor:pointer;
+}
+.online{
+  width:150px;
+  height:40px;
+  margin:5px;
+  padding: 15px;
+  text-align: left;
+}
+.datechanged{
+  text-align: center;
+  font-weight: bold;
+}
+
+.online h4{
+  text-align: center;
+}
+.promote{
+  text-align: center;
+  padding-left: 0px;
+  font-family: fantasy;
+}
+
+.chatbox{
+  padding:30px;
+  background-color: rgba(240,248,255);
+}
+
+.chatbox h5{
+  text-align: center;
+}
+
+.foot{
+  text-align: center;
+  font-size: 12px;
+}
+.promote{
+  padding:10px;
+}
+
+.odiv{
+  padding: 5%;
+  padding-top: 1%;
+}
+.chatinput{
+  padding:20px;
+}
+.progress-bar {
+    width: 300px; height: 14px;
+    border-radius: 10px;
+    border: 1px solid #CCC;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#6666cc), to(#4b4b95));
+    border-image: initial;
+}
+.uploaded {
+    padding: 0;
+    height: 14px;
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#66cc00), to(#4b9500));
+    border-image: initial;
+}
+
+.emoji-box{
+  height : 100px;
+  max-height: 100px;
+  overflow-y: auto;
+}

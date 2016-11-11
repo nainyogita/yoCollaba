@@ -1,0 +1,196 @@
+<link rel="stylesheet" href="teamleader.css">
+<div class="container-fluid">
+	<div class="row">
+		<!-- display teams and channels under a particular team leader  -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<div class="col-md-12">
+				<!-- Select Table begins -->
+				<table class="table table-condensed table-bordered channel-edit borderless">
+					<tbody>
+						<tr>
+							<td>
+								Select Team
+							</td>
+							<td>
+								<select name = "teamSelectShow" id = "mySelectShow"
+								ng-options = " team.name for team in teamleader.teamInfo"
+								ng-model = "teamleader.selectedOptionToShow"
+								ng-change = "teamleader.getChannels(teamleader.teamInfo)">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Select Channel
+							</td>
+							<td>
+								<select name = "channelSelectShow" id = "mySelectChannel"
+								ng-options = "channel.name for channel in teamleader.channelList "
+								ng-model = " teamleader.channelShown"
+								ng-change = "teamleader.displayChannel(teamleader.channelList)">
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr class = "divider" />
+				<!-- Select Table ends -->
+				<!-- Table begins -->
+				<table class="table table-condensed table-bordered channel-edit">
+					<tbody>
+						<tr>
+							<td>
+								Name
+							</td>
+							<td>
+								<div contenteditable = "false" class = "inline" ng-model = "teamleader.channelBlob.name">{{teamleader.channelBlob.name}}</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Description
+							</td>
+							<td>
+								<div contenteditable = "false" class = "inline" ng-model = "teamleader.channelBlob.info">{{teamleader.channelBlob.info}}</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Members
+							</td>
+							<td>
+								<div style = "display:inline">
+									<ul>
+										<li ng-repeat = "people in teamleader.channelBlob.members">
+											{{ people }}
+										</li>
+									</ul>
+								</div>
+								<div class = "btn-panel pull-right">
+									<button type="button" class="btn btn-primary edit-icon btn-circle" ng-click="teamleader.showEditableBoxes()" ng-show="teamleader.modeOff" title = "edit">
+										&#x270E;
+									</button>
+									<button type = "button" class = "btn btn-success btn-circle" ng-click="teamleader.lockEditableBoxes()" ng-show="teamleader.modeOn" title = "Save">
+										&#x2713;
+									</button>
+									<button type = "button" class = "btn btn-danger btn-circle" ng-click="teamleader.rejectEditableBoxes()" ng-show="teamleader.modeOn" title = "Reject">
+										&#x2716;
+									</button>
+									<div ng-dropdown-multiselect="" options="teamleader.membersList" selected-model="teamleader.membersListSelected"
+									extra-settings = "{ scrollable: true, enableSearch: true };" ng-show="teamleader.modeOn" class = "inline"></div>
+									<div ng-show = "teamleader.modeOn">
+										Members added :
+										<div ng-repeat = "member in teamleader.getTrimmed(teamleader.membersListSelected)" class = "label label-default">
+											{{member}}
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- Table ends -->
+			</div>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<form class="form-horizontal" role="form">
+			<!-- Table begins -->
+			<table class="table table-condensed table-bordered channel-edit borderless">
+				<!-- <thead>
+					<tr>
+						<th colspan = "3">
+							Create a new Channel
+						</th>
+					</tr>
+				</thead> -->
+				<tbody>
+					<tr>
+						<td>
+							Select Team
+						</td>
+						<td>
+							<select name = "teamSelect" id = "mySelect"
+	            ng-options = " team.name for team in teamleader.teamInfo "
+	            ng-model = "teamleader.selectedOption">
+	            </select>
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Channel Name
+						</td>
+						<td>
+							<input type="text" class="form-control" id="channelName" ng-model = "teamleader.channelJSON.name" required/>
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Channel Type
+						</td>
+						<td>
+							<div class="onoffswitch">
+	    					<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" ng-model = "teamleader.channelJSON.type">
+	    					<label class="onoffswitch-label" for="myonoffswitch">
+	        				<span class="onoffswitch-inner"></span>
+	        				<span class="onoffswitch-switch"></span>
+	    					</label>
+							</div>
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Description
+						</td>
+						<td>
+							<textarea class="form-control" id="channelDesc" ng-model = "teamleader.channelJSON.info">
+	            </textarea>
+						</td>
+						<td>
+							&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Add Members
+						</td>
+						<td>
+							<input type = "text" class="form-control" id="channelFolks"
+										ng-model = "teamleader.member" required/>
+							<!-- Chips -->
+							<div ng-repeat="members in teamleader.channelJSON.members">
+								<span class="chip">
+									{{members}}
+									<span class="closebtn" ng-click="teamleader.memListRem($index)">&times;</span>
+								</span>
+							</div>
+						</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-circle" ng-click="teamleader.addChannelMember()">+</button>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							&nbsp;
+						</td>
+						<td colspan = "2">
+							<button type="button" class="btn btn-default pull-right btn-primary" ng-click = "teamleader.addChannel()">
+								Add Channel
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+			<!-- Table ends -->
+		</div>
+	</div>
+</div>

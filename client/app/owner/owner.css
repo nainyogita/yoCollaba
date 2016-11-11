@@ -1,0 +1,22 @@
+.ownerTab{
+  background-color: navy;
+  color:white;
+}
+
+.btn-delete{
+  font-size:12px;
+  background-color: #ef5350;
+  border-radius: 0px;
+}
+
+.team-table{
+  border: 2px solid grey;
+  /*border: 2px solid #337ab7;*/
+  border-radius: 15px;
+}
+
+.fix-top-right {
+  position: absolute;
+  top: 1%;
+  right : 5%;
+}

@@ -1,0 +1,137 @@
+<br><br>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">
+						Organization Information
+					</h3>
+				</div>
+				<div class="panel-body">
+					<!-- Table here -->
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									Field
+								</th>
+								<th>
+									Description / Values
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Name of the organization -->
+							<tr>
+								<td>
+									Name
+								</td>
+								<td>
+									{{owner.organization.name}}
+								</td>
+							</tr>
+							<!-- Domain of the organization -->
+							<tr>
+								<td>
+									Domain
+								</td>
+								<td>
+									{{owner.organization.domain}}
+								</td>
+							</tr>
+							<!-- Description of the organization -->
+							<!-- <tr>
+								<td>
+									Description
+								</td>
+								<td>
+									{{owner.organization.info}}
+								</td>
+							</tr> -->
+							<!-- Owner Name-->
+							<tr>
+								<td>
+									Owner / Rep Name
+								</td>
+								<td>
+									{{owner.organization.owner.name}}
+								</td>
+							</tr>
+							<!-- Owner email -->
+							<tr>
+								<td>
+									Owner / Email
+								</td>
+								<td>
+									{{owner.organization.owner.email}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!--  display team information  -->
+		<div class="col-md-6">
+			<div class="list-group">
+				<a href="#" class="list-group-item active">Teams Created</a>
+				<div class="list-group-item" ng-repeat = "team in owner.organization.team">
+					<table class="table team-table">
+						<thead>
+							<tr>
+								<td colspan = "3">
+									{{ team.name }}
+									<button type="button" class="btn btn-danger
+									pull-right btn-delete fix-top-right" title="delete this team"
+									ng-click = "owner.delete(team.name)">Delete</button>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<strong>1</strong>
+								</td>
+								<td>
+									<strong>Admins</strong>
+								</td>
+								<td>
+									<ul>
+										<li ng-repeat = "admin in team.thead">
+											{{ admin }}
+										</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>2</strong>
+								</td>
+								<td>
+									<strong>Description</strong>
+								</td>
+								<td>
+									{{team.info}}
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>3</strong>
+								</td>
+								<td>
+									<strong>Members</strong>
+								</td>
+								<td>
+									{{ team.members.length }}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

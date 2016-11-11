@@ -77,7 +77,8 @@
         <!-- <div class="col-md-7"> -->
         <input type="text" placeholder="Enter your Message" ng-model="vm.message" ng-keyup="vm.isTyping()"/>
         <!-- Upload on file select -->
-        <button type="button" class="btn btn-sm btn-primary" ngf-select="vm.upload($file)">+</button>
+        <button type="button" class="btn btn-sm btn-primary" ngf-select="vm.upload($file)">&#10010;</button>
+        <button type="button" class="btn btn-sm btn-primary" ng-click="vm.showEmoji=!vm.showEmoji" >&#9786;</button>
         <br><br>
 
 
@@ -87,7 +88,7 @@
 
       </div>
 
-      <div class="col-md-12" class = "emoji-box">
+      <div class="col-md-12 emoji-box" ng-show="vm.showEmoji">
         <button type="button" class="btn btn-default" ng-repeat = "(key, value) in vm.emojiList" ng-click="vm.addThisEmoji(key, value)">
           {{value}}
         </button>

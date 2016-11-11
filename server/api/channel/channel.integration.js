@@ -25,7 +25,7 @@ describe('Channel API:', function() {
          name: 'South Delhi',
          thead: ['thead@example.com'],
          members: ['priyanka@example.com','thead@example.com'],
-         info: 'All about our South Delhi',
+         info: 'some information',
        });
        teamleader = new User({
          provider: 'local',

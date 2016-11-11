@@ -69,6 +69,12 @@ export class NavbarComponent {
             else if(res.role == 'user')
               this.$state.go('home');
 
+            else if(res.role == 'owner')
+              this.$state.go('owner.dashboard');
+
+            else if(res.role == 'thead')
+              this.$state.go('teamleader.dashboard');
+
            else this.$state.go('main');
           })
           .catch(err => {

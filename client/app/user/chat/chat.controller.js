@@ -50,6 +50,8 @@ export default class ChatController {
   TeamLeader;
   allowLeaving;
   typing;
+  showEmoji;
+
 
   /*@ngInject*/
   constructor(Auth, $state, socket, Upload, $http, $scope, Notification, Emoji, TeamLeader) {
@@ -69,6 +71,7 @@ export default class ChatController {
     this.TeamLeader = TeamLeader;
     this.allowLeaving = true;
     this.typing = '';
+    this.showEmoji=false;
 
     this.team = $scope.$parent.vmHome.selectedTeamInfo;
     this.tm = $scope.$parent.vmHome.tm;
@@ -136,7 +139,10 @@ export default class ChatController {
       // Typing... feature
       this.socket.syncTyping(data => {
         if (data.room == this.roomName) {
-          this.typing = data.sender + " " + data.message;
+          if(data.sender==this.user.name)
+            this.typing="";
+          else
+            this.typing = data.sender + " " + data.message;
         }
       });
 

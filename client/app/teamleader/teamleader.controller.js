@@ -303,10 +303,35 @@ export default class TeamleaderController {
     this.submitted = false;
   }
 
-  /* adding a channel into a team */
+  /**
+   * [isEmpty description]
+   * @param  {String}  string String to be checked
+   * @return {Boolean}        Whether the string is empty or not
+   */
+  isEmpty(string) {
+    return typeof string == 'string' && !string.trim() || typeof string == 'undefined' || string === null;
+  }
+
+  /**
+   * Checks if the credentials to add team are empty or not
+   * @return {Boolean} Whether the JSON has any empty values or not
+   */
+  checkForEmptyValues(){
+    if(this.isEmpty(this.channelJSON.name) === true)
+      return true;
+    if(this.isEmpty(this.channelJSON.info) === true)
+      return true;
+    return false;
+  }
+
+  /**
+   * Add a channel to the database
+   */
   addChannel(){
-    this.channelJSON.type = this.channelJSON.type?'public':'private';
-    this.Channel.addChannel({'JSON' : this.channelJSON, 'teamId' : this.selectedOption._id, 'teamLeader' : this.email });
-    this.$state.go('teamleader.dashboard');
+    if(this.checkForEmptyValues() === false) {
+      this.channelJSON.type = this.channelJSON.type?'public':'private';
+      this.Channel.addChannel({'JSON' : this.channelJSON, 'teamId' : this.selectedOption._id, 'teamLeader' : this.email });
+      this.$state.go('teamleader.dashboard');
+    }
   }
 }
